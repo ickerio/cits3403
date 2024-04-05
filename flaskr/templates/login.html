@@ -1,43 +1,45 @@
-<!DOCTYPE html>
+
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="color-scheme" content="dark light">
-        <title>Login</title>
-		<link rel="icon" href="{{ url_for('static', filename='favicon.png') }}0">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-	</head>
-	<body >
-		<header>
-            <nav class="container">
-                <a href="/">
-                    <h1>Login</h1>
-                </a>
-                <div>
-                    <a href="{{ url_for('login') }}">Login</a>
-                    <a href="{{ url_for('findSketch') }}">Find Sketch</a>
-                    <a href="{{ url_for('guessSketch') }}">Guess Sketch</a>
-                    <a href="{{ url_for('drawSketch') }}">Draw Sketch</a>
-                    <div class="avatar">
-                        <span>HI</span>
-                    </div>
-                </div>
-            </nav>
-        </header>
-        <div class="container">
-            <div class="login-container">
-                <h2>Login to Your Account</h2>
-                <form action="{{ url_for('login_action') }}" method="post">
-                    <input type="email" id="email" name="email" placeholder="Email" required>
-                    <input type="password" id="password" name="password" placeholder="Password" required>
-                    <button type="submit">Login</button>
-                </form>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Favicon -->
+    <link rel="icon" href="{ url_for('static', filename='favicon.png') }">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{ url_for('static', filename='css/styles.css') }">
+    
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="/">
+                <h1>Login</h1>
+            </a>
+            <div>
+                <a href="{ url_for('login') }">Login</a>
+                <a href="{ url_for('findSketch') }">Find Sketch</a>
+                <a href="{ url_for('guessSketch') }">Guess Sketch</a>
+                <a href="{ url_for('drawSketch') }">Draw Sketch</a>
             </div>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="login-container">
+            <p class="welcome-message">Welcome!</p>
+            <h2>Login</h2>
+            <form action="{ url_for('login_action') }" method="post">
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
         </div>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-	</body>
+    </div>
+    <!-- JavaScript and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="{ url_for('static', filename='js/script.js') }"></script>
+</body>
 </html>
