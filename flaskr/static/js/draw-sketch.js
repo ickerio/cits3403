@@ -1,9 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
     let canvas = document.getElementById('drawingCanvas');
     let ctx = canvas.getContext('2d');
+    let currentColor = '#000000'; // Default color
     let painting = false;
+
+    //These 2 lines are placeholders -> used for pasting the submitted drawing below the canvas
     let submittedDiv = document.createElement('div'); // Div to hold submitted drawings
     document.body.appendChild(submittedDiv); // Append it to the body or to a specific container where you want the drawings to show
+
+    // Update the currentColor when a new color is picked
+    document.getElementById('colorPicker').addEventListener('change', function(e) {
+        currentColor = e.target.value;
+        ctx.strokeStyle = currentColor; // Set the new color as the stroke style
+    });
 
     function startPosition(e) {
         painting = true;
@@ -42,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseout', finishedPosition); // Stop drawing when the mouse leaves the canvas
 
-    // Submit and clear the canvas, then show the drawing below
+    // Submit and clear the canvas, then show the drawing below (again, placeholder functionality)
     document.getElementById('submitCanvas').addEventListener('click', function() {
         let dataURL = canvas.toDataURL();
         let img = new Image();
