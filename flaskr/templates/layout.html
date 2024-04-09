@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        {% block head %}
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="color-scheme" content="dark light">
+        <title>Sketchy - {% block title %}{% endblock %}</title>
+		<link rel="icon" href="{{ url_for('static', filename='favicon.png') }}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        {% endblock %}
+	</head>
+	<body >
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-top">
+                <div class="container">
+                    <a class="navbar-brand" href="/">Sketchy</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('findSketch') }}">Find Sketch</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('guessSketch') }}">Guess Sketch</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('drawSketch') }}">Draw Sketch</a></li>
+                            <div class="nav-item avatar"><span>HI</span></div>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div>{% block content %}{% endblock %}</div>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+	</body>
+</html>
