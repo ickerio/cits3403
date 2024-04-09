@@ -29,7 +29,12 @@
         <div class="container">
             <h1>Main body content here</h1>
         </div>
-
+            <div class="input">
+                <input type="text" id="userguess" class="form-control" placeholder="Guess the sketch">
+                <div class="input-group-append">
+                    <button class="btn-primary" type="button" <!-- onclick="checkGuess()" --> >Submit</button>
+                </div>
+            </div>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
         <script src="{{ url_for('static', filename='js/script.js') }}"></script>
