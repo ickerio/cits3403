@@ -1,14 +1,10 @@
 $(document).ready(function() {
-    //Probably should be using let?
-    var canvas = $('#drawingCanvas')[0];
-    var ctx = canvas.getContext('2d');
+    let canvas = $('#drawingCanvas')[0];
+    let ctx = canvas.getContext('2d');
     let timeLeft = 10;
-    var timerInterval;
-    var currentColor = '#000000'; // Default color
-    var painting = false;
-    // These 2 lines are placeholders -> used for pasting the submitted drawing below the canvas
-    var submittedDiv = $('<div></div>'); // Create a div to hold submitted drawings
-    $('body').append(submittedDiv); // Append it to the body
+    let timerInterval;
+    let currentColor = '#000000'; // Default drawing color
+    let painting = false;
 
     // Function to disable/enable drawing and UI elements
     function toggleDrawing(enable) {
@@ -34,12 +30,19 @@ $(document).ready(function() {
         }, 1000);
     }
 
+    // Function to fetch word to draw (not implemented) and place in DOM
+    function fetchWordAndStartGame() {
+        let word = "Banana"; // Placeholder, need to fetch and handle errors appropriately
+        $('#wordPlaceholder').text(word);
+        startGame();
+    }    
+
     // Function to handle the drawing submission
     function submitDrawing() {
         clearInterval(timerInterval); // Ensure to clear the interval on submission
-        var dataURL = canvas.toDataURL();
-        var img = $('<img>').attr('src', dataURL).on('load', function() {
-            $('body').append(img); // Append the submitted drawing somewhere on the page
+        let dataURL = canvas.toDataURL();
+        let img = $('<img>').attr('src', dataURL).on('load', function() {
+            $('body').append(img); // Append the submitted drawing somewhere on the page (placeholder functionality, need to send somewhere)
         });
 
         ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
@@ -70,15 +73,15 @@ $(document).ready(function() {
         if (!painting) return;
 
         // Determine whether this is a mouse event or a touch event
-        var clientX = e.clientX || e.touches[0].clientX;
-        var clientY = e.clientY || e.touches[0].clientY;
+        let clientX = e.clientX || e.touches[0].clientX;
+        let clientY = e.clientY || e.touches[0].clientY;
 
-        var bounds = canvas.getBoundingClientRect();
-        var scaleX = canvas.width / bounds.width;
-        var scaleY = canvas.height / bounds.height;
+        let bounds = canvas.getBoundingClientRect();
+        let scaleX = canvas.width / bounds.width;
+        let scaleY = canvas.height / bounds.height;
 
-        var mouseX = (clientX - bounds.left) * scaleX;
-        var mouseY = (clientY - bounds.top) * scaleY;
+        let mouseX = (clientX - bounds.left) * scaleX;
+        let mouseY = (clientY - bounds.top) * scaleY;
 
         ctx.lineWidth = 5;
         ctx.lineCap = 'round';
@@ -97,7 +100,7 @@ $(document).ready(function() {
 
 
     // EventListeners for starting and ending the game
-    $('#beginButton').on('click', startGame);
+    $('#beginButton').on('click', fetchWordAndStartGame);
     $('#submitCanvas').on('click', submitDrawing);
 
     // EventLister to update the currentColor when a new color is picked

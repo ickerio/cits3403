@@ -1,3 +1,4 @@
+// These four are to disable functionality until "begin" button is pressed
 #wordPlaceholder { display: none; }
 #drawingCanvas { pointer-events: none; }
 #colorPicker { pointer-events: none; }
@@ -12,13 +13,13 @@
 }
 
 body {
-    padding-top: 56px; //Space for the navbar
+    padding-top: 46px; // Space for the navbar
 }
 
 .canvas-wrapper {
     position: relative;
     width: 100%;
-    padding-top: 56.25%;
+    padding-top: 46.25%; // This is the height of the canvas, effectively
     background-color: #000;
 }
 
