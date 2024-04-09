@@ -1,3 +1,8 @@
+#wordPlaceholder { display: none; }
+#drawingCanvas { pointer-events: none; }
+#colorPicker { pointer-events: none; }
+#submitCanvas { pointer-events: none; }
+
 #drawingCanvas {
     background-color: white;
 }
