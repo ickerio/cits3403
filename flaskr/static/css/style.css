@@ -34,6 +34,10 @@ body {
     height: 2.5rem;
 }
 
+.navbar-nav {
+    gap: 1.5rem;
+}
+
 /** AVATAR **/
 div.avatar {
     display: flex;
@@ -47,7 +51,7 @@ div.avatar {
     cursor: pointer;
 }
 
-div.avatar > span {
+div.avatar > a {
     color: var(--primary);
     font-weight: bold;
 }
