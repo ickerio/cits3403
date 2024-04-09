@@ -2,8 +2,24 @@
 {% block title %}Home{% endblock %}
 {% block head %}
     {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 {% endblock %}
 {% block content %}
     <h1>Welcome back {{ first_name }} {{ last_name }}</h1>
-    <p>Welcome to the home page</p>
+    <div class="card-grid">
+        {% for sketch in sketches %}
+            <div class="card">
+                <img src="https://picsum.photos/seed/{{ sketch.id }}/300/300" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">@{{ sketch.username }}</h5>
+                    {% if sketch.has_guessed %}
+                        <p class="card-text">You guessed in 25s</p>
+                    {% else %}
+                        <a href="#" class="btn btn-primary" role="button">Guess</a>
+                    {% endif %}
+                    <p class="card-text"><small class="text-muted">{{ sketch.date }}</small></p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
