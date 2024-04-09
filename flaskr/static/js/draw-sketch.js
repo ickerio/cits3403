@@ -1,7 +1,9 @@
-$(document).ready(function() {
-    const $canvas = $('#drawingCanvas');
-    const ctx = $canvas[0].getContext('2d');
+document.addEventListener('DOMContentLoaded', function() {
+    let canvas = document.getElementById('drawingCanvas');
+    let ctx = canvas.getContext('2d');
     let painting = false;
+    let submittedDiv = document.createElement('div'); // Div to hold submitted drawings
+    document.body.appendChild(submittedDiv); // Append it to the body or to a specific container where you want the drawings to show
 
     function startPosition(e) {
         painting = true;
@@ -15,35 +17,43 @@ $(document).ready(function() {
 
     function draw(e) {
         if (!painting) return;
-        const mouseX = e.clientX - $canvas.offset().left;
-        const mouseY = e.clientY - $canvas.offset().top;
-        ctx.lineWidth = 5; 
-        ctx.lineCap = 'round'; 
-
-        ctx.lineTo(mouseX, mouseY); 
+    
+        let bounds = canvas.getBoundingClientRect();
+        // Calculate the scale factor for X and Y
+        let scaleX = canvas.width / bounds.width;
+        let scaleY = canvas.height / bounds.height;
+    
+        // Adjust mouse coordinates using the scale factor
+        let mouseX = (e.clientX - bounds.left) * scaleX;
+        let mouseY = (e.clientY - bounds.top) * scaleY;
+    
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+    
+        ctx.lineTo(mouseX, mouseY);
         ctx.stroke();
-        ctx.beginPath(); 
-        ctx.moveTo(mouseX, mouseY); 
-    }
+        ctx.beginPath();
+        ctx.moveTo(mouseX, mouseY);
+    }    
 
-    $canvas.mousedown(startPosition);
-    $canvas.mouseup(finishedPosition);
-    $canvas.mousemove(draw);
+    // EventListeners for drawing
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('mouseup', finishedPosition);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseout', finishedPosition); // Stop drawing when the mouse leaves the canvas
 
-    //This is a placeholder, currently just pastes the drawing below and clears the canvas
-    $('#submitCanvas').click(function() {
-        const image = new Image();
-        image.src = $canvas[0].toDataURL();
-        image.onload = function() {
-            const displayCanvas = $('<canvas></canvas>').attr({
-                width: $canvas[0].width / 2,
-                height: $canvas[0].height / 2
-            })[0];
-            const displayCtx = displayCanvas.getContext('2d');
-            displayCtx.drawImage(image, 0, 0, displayCanvas.width, displayCanvas.height);
-            $('body').append(displayCanvas);
+    // Submit and clear the canvas, then show the drawing below
+    document.getElementById('submitCanvas').addEventListener('click', function() {
+        let dataURL = canvas.toDataURL();
+        let img = new Image();
+        img.src = dataURL;
+
+        // Clear the canvas after submitting
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Wait for the image to load before appending it, to ensure it's displayed
+        img.onload = function() {
+            submittedDiv.appendChild(img); // Append the image to the submittedDiv
         };
-
-        ctx.clearRect(0, 0, $canvas[0].width, $canvas[0].height);
     });
 });
