@@ -1,43 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="color-scheme" content="dark light">
-        <title>Login</title>
-		<link rel="icon" href="{{ url_for('static', filename='favicon.png') }}0">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-	</head>
-	<body >
-		<header>
-            <nav class="container">
-                <a href="/">
-                    <h1>Login</h1>
-                </a>
-                <div>
-                    <a href="{{ url_for('login') }}">Login</a>
-                    <a href="{{ url_for('findSketch') }}">Find Sketch</a>
-                    <a href="{{ url_for('guessSketch') }}">Guess Sketch</a>
-                    <a href="{{ url_for('drawSketch') }}">Draw Sketch</a>
-                    <div class="avatar">
-                        <span>HI</span>
-                    </div>
-                </div>
-            </nav>
-        </header>
-        <div class="container">
-            <div class="login-container">
-                <h2>Login to Your Account</h2>
-                <form action="{{ url_for('login_action') }}" method="post">
-                    <input type="email" id="email" name="email" placeholder="Email" required>
-                    <input type="password" id="password" name="password" placeholder="Password" required>
-                    <button type="submit">Login</button>
-                </form>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="icon" href="{ url_for('static', filename='favicon.png') }">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{ url_for('static', filename='css/login.css') }">
+    <style>
+        html {
+            height: 100%;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #ffffff; /* Explicitly setting a light background */
+            color: #000000; /* Explicitly setting text color to black */
+            border-radius: 0.3em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+        }
+        .login-container h2 {
+            color: #000000; /* Explicitly setting text color to black */
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .login-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .login-container input {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 0.3em;
+            border: 1px solid #dcdcdc;
+        }
+        .login-container input:focus {
+            outline: none;
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        .login-container button {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0.3em;
+            background-color: #007bff; /* Bootstrap primary color */
+            color: white;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .login-container button:hover {
+            background-color: #0056b3;
+        } 
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="/">
+                <h1>Login</h1>
+            </a>
+            <div class="sidebar" style="width:25%">
+                <a href="{ url_for('login') }"></a>
+                <a href="{ url_for('findSketch') }">Find Sketch</a>
+                <a href="{ url_for('guessSketch') }">Guess Sketch</a>
+                <a href="{ url_for('drawSketch') }">Draw Sketch</a>
             </div>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="login-container">
+            <h2>Log in</h2>
+            <form action="{ url_for('login_action') }" method="post">
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <div class="form-check">
+                    <input type="checkbox" id="rememberMe" name="rememberMe" class="form-check-input">
+                    <label for="rememberMe" class="form-check-label">Remember Me</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <!-- Added "Don't have an account? Sign up" below the login button -->
+                <p class="mt-4 text-center">Don't have an account? <a href="{ url_for('signup') }">Sign up</a></p>
+            </form>
         </div>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-	</body>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="{ url_for('static', filename='js/script.js') }"></script>
+</body>
 </html>
