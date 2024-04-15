@@ -2,6 +2,11 @@
 
 {% block title %}Draw Sketch{% endblock %}
 
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/draw-sketch.css') }}">
+{% endblock %}
+
 {% block content %}
     <div class="row my-4">
         <div class="col-sm-6 text-left">
@@ -29,8 +34,11 @@
     </div>
 {% endblock %}
 
-{% block head %}
+{% block scripts %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/draw-sketch.css') }}">
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
+    <script src="{{ url_for('static', filename='js/draw-sketch.js') }}"></script>
 {% endblock %}
+
+
+
+
