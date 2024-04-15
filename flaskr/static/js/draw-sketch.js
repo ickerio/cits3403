@@ -21,7 +21,7 @@ $(document).ready(function() {
         toggleDrawing(true);
         $('#beginButton').hide(); // Hide the begin button
         timerInterval = setInterval(function() {
-            $('#timerPlaceholder').text(timeLeft + 's');
+            $('#timerPlaceholder').text(timeLeft);
             timeLeft -= 1;
             if (timeLeft < 0) {
                 clearInterval(timerInterval);
@@ -49,7 +49,7 @@ $(document).ready(function() {
 
         toggleDrawing(false); // Disable drawing after submission
         $('#beginButton').show(); // Show the begin button again for a new game
-        $('#timerPlaceholder').text("00:00"); // Reset the timer display
+        $('#timerPlaceholder').text("10"); // Reset the timer display
     }
 
     // Function to handle the start of a touch/draw
