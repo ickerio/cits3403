@@ -17,6 +17,9 @@
     width: 100%;
     padding-top: 46.25%; // This is the height of the canvas, effectively
     background-color: #000;
+    border: 3px solid black; /* Adds a blue border around the canvas wrapper */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
+    border-radius: 8px; /* Rounds the corners of the canvas wrapper */
 }
 
 #drawingCanvas {
@@ -33,4 +36,27 @@
     top: 50%; /* Center vertically */
     left: 50%; /* Center horizontally */
     transform: translate(-50%, -50%); /* Offset the button by half its width and height to truly center it */
+}
+
+#colorPicker {
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: white;
+    transition: all 0.3s ease; /* Updated to animate all properties smoothly */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0); /* Initial state with no shadow */
+}
+
+#colorPicker:hover {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5); /* Soft shadow for a subtle 3D effect */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+#timerPlaceholder {
+    display: inline-block;
+    width: 30px; 
+    text-align: left;
+}
+
+.timer-icon {
+    margin-right: 15px; /* Maintain a consistent spacing */
 }
