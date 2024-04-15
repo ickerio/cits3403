@@ -28,6 +28,29 @@
         </header>
         <div class="container">
             <h1>Main body content here</h1>
+
+            <div class="input">
+                <input type="text" id="userguess" class="form-control" placeholder="Guess the sketch">
+                <div class="input-group-append">
+                    <button class="btn-primary" type="submit"> <!--onclick="checkGuess()" --> Submit</button>
+
+                </div>
+            </div>
+            
+            <p> Time: <span id="countdowntimer">10 </span> Seconds</p>
+            <script>
+                var timeleft = 10;
+                var downloadTimer = setInterval(function(){
+                    timeleft--;
+                    document.getElementById("countdowntimer").textContent = timeleft;
+                    if(timeleft <= 0) {
+                        clearInterval(downloadTimer);
+                        setTimeout(function() {
+                            alert("Time's up :( ");
+                        },1000);
+                    }
+                }, 1000);
+            </script>
         </div>
 
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

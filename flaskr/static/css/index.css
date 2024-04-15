@@ -1,0 +1,14 @@
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1rem;
+}
+
+.card {
+    overflow: hidden;
+}
+
+.card-img-top {
+    filter: blur(0.8rem);
+    pointer-events: none;
+}

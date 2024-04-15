@@ -12,93 +12,30 @@
 }
 
 body {
-    color: white;
-    background-color: var(--black);
     margin: 0;
 }
 
-*::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    background-clip: padding-box;
-    border-radius: 0.5rem;
-    border: 0.25rem solid transparent;
+/** NAVBAR **/
+.navbar {
+    height: 6rem;
 }
 
-*::-webkit-scrollbar {
-    width: 1rem;
-}
-
-*::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-/** LAYOUT STYLING **/
-
-header {
-    position: sticky;
-    top: 0;
-    bottom: auto;
-    z-index: 100;
-    padding: 0.5rem 0.5rem 0 0.5rem;
-    background-color: var(--black);
-}
-
-nav {
+.navbar-brand {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 3.5rem;
-    background-color: var(--accent);
-    border-radius: var(--border-radius);
+    justify-content: center;
+    gap: 1rem;
+    font-weight: 600;
+    font-size: 2rem;
 }
 
-nav > a {
-    all: unset;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 1em;
+.navbar-brand > img {
+    width: 2.5rem;
+    height: 2.5rem;
 }
 
-nav > div > a {
-    all: unset;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition-duration: .25s;
-}
-
-nav > div > a:hover {
-    color: var(--primary)
-}
-
-button {
-    all: unset;
-    display:contents;
-    cursor: pointer;
-}
-
-.container {
-    margin: 0 auto;
-    padding: 0 2rem;
-}
-
-@media (min-width: 1540px) {
-    .container {
-        max-width: 1540px;
-    }
-}
-
-@media (min-width: 768px) {
-    div {
-        display: flex;
-        align-items: center;
-        gap: 3rem;
-    }
-
-    button {
-        display: none;
-    }
+.navbar-nav {
+    gap: 1.5rem;
 }
 
 /** AVATAR **/
@@ -108,13 +45,13 @@ div.avatar {
     align-items: center;
     width: 2.5em;
     height: 2.5em;
-    background-color: var(--primary);
+    background-color: var(--accent);
     text-align: center;
     border-radius: 50%;
     cursor: pointer;
 }
 
-div.avatar > span {
-    color: var(--accent);
+div.avatar > a {
+    color: var(--primary);
     font-weight: bold;
 }
