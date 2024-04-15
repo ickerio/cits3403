@@ -1,68 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Draw Sketch</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/draw-sketch.css') }}">
-</head>
-<body>
+{% extends "layout.html" %}
 
-    <!-- NEED TO STANDARDIZE -->
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-light fixed-top">
-            <div class="container">
-                <a class="navbar-brand" href="/">Sketchy</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('findSketch') }}">Find Sketch</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('guessSketch') }}">Guess Sketch</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('drawSketch') }}">Draw Sketch</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>   
-    <div class="container">
-        <!-- ROW OF WORD TO DRAW AND TIMER -->
-        <div class="row my-4">
-            <div class="col-sm-6 text-left">
-                <h2>Draw <span id="wordPlaceholder" style="color: blue"></span></h2>
-            </div>
-            <div class="col-sm-6 text-right">
-                <h2>
-                    <span id="timerPlaceholder">00:00</span>
-                    <!-- Add icon -->
-                </h2>
-            </div>
+{% block title %}Draw Sketch{% endblock %}
+
+{% block content %}
+    <div class="row my-4">
+        <div class="col-sm-6 text-left">
+            <h2>Draw <span id="wordPlaceholder" style="color: blue"></span></h2>
         </div>
-        <!-- CANVAS -->
-        <div class="row my-4">
-            <div class="col-sm-12">
-                <div class="canvas-wrapper">
-                    <button id="beginButton" class="btn btn-primary" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;">Begin</button>
-                    <canvas id="drawingCanvas" width="2048" height="1152" style="border:1px solid #000;">Your browser does not support the HTML canvas tag.</canvas>
-                </div>
-            </div>
+        <div class="col-sm-6 text-right">
+            <h2><span id="timerPlaceholder">00:00</span></h2>
         </div>
-        <!-- ROW OF COLOR SELECTOR AND SUBMIT BUTTON -->
-        <div class="row my-4">
-            <div class="col-sm-6 text-left">
-                <input type="color" id="colorPicker">
-            </div>
-            <div class="col-sm-6 text-right">
-                <button id="submitCanvas" class="btn btn-primary float-right">Submit Drawing</button>
+    </div>
+    <div class="row my-4">
+        <div class="col-sm-12">
+            <div class="canvas-wrapper">
+                <button id="beginButton" class="btn btn-primary">Begin</button>
+                <canvas id="drawingCanvas" width="2048" height="1152">Your browser does not support the HTML canvas tag.</canvas>
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script> <!-- Replace with your actual Font Awesome kit -->
-    <script src="{{ url_for('static', filename='js/draw-sketch.js') }}"></script>
-</body>
-</html>
+    <div class="row my-4">
+        <div class="col-sm-6 text-left">
+            <input type="color" id="colorPicker">
+        </div>
+        <div class="col-sm-6 text-right">
+            <button id="submitCanvas" class="btn btn-primary float-right">Submit Drawing</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/draw-sketch.css') }}">
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js"></script>
+{% endblock %}
