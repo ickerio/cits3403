@@ -50,9 +50,9 @@ def login():
 def findSketch():
     return render_template('find-sketch.html', **get_user())
 
-@app.route('/guess-sketch')
+@app.route('/guess')
 def guessSketch():
-    return render_template('guess-sketch.html', **get_user())
+    return render_template('guess.html', **get_user())
 
 @app.route('/draw-sketch')
 def drawSketch():
