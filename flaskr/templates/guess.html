@@ -5,19 +5,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/guess.css') }}">
 {% endblock %}
 {% block content %}
-    <div class="container">
-        <h1>Main body content here</h1>
-
-        <div class="input">
-            <input type="text" id="userguess" class="form-control" placeholder="Guess the sketch">
-            <div class="input-group-append">
-                <button class="btn-primary" type="submit"> <!--onclick="checkGuess()" --> Submit</button>
-
-            </div>
+<div class="container">
+    <h1>Time to guess!</h1>
+    <div class="canvas-container">
+        <canvas id="drawnCanvas" width="500" height="500" style="border: 2px solid black;"></canvas>
+    </div> 
+    <div class="input">
+        <input type="text" id="userguess" class="form-control" placeholder="Guess the sketch">
+        <div class="input-group-append">
+            <button class="btn-primary" id="submitguessBtn" type="submit" onclick="checkGuess()">Submit</button>
         </div>
-        
-        <p> Time: <span id="countdowntimer">10 </span> Seconds</p>
     </div>
+
+    <p> Time remaining: <span id="countdown">10</span> Seconds</p>
+</div>
 {% endblock %}
 {% block scripts %}
     {{ super() }}
