@@ -12,3 +12,7 @@
     filter: blur(0.8rem);
     pointer-events: none;
 }
+
+h1 {
+    padding: 1rem;
+}

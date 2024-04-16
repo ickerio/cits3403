@@ -22,7 +22,8 @@ TODO a brief summary of the architecture of the application.
 ### Launching
 
 1. install python3
-2. install pip3 `sudo apt install python3-pip`
+2. install pip3 with `sudo apt install python3-pip`
+3. install flask with `pip install -U Flask`
 3. run flask `python3 -m flask --app flaskr run --debug`
 
 ### Testing
