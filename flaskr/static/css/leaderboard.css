@@ -1,0 +1,16 @@
+.stats-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 2rem;
+}
+
+.card {
+    padding: 0 2rem;
+}
+
+h1 {
+    text-align: center;
+    padding-top: 2rem;;
+}
