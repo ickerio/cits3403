@@ -2,11 +2,11 @@
 {% block title %}Login{% endblock %}
 {% block head %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 {% endblock %}
 {% block content %}
     <div class="container">
-        <div class="login-container">
+        <div class="auth-container">
             <h2>Log in</h2>
             <form action="{ url_for('login_action') }" method="post">
                 <input type="email" id="email" name="email" placeholder="Email" required>
