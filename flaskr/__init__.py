@@ -46,6 +46,10 @@ def index():
 def login():
     return render_template('login.html', **get_user())
 
+@app.route('/signup')
+def signup():
+    return render_template('signup.html', **get_user())
+
 @app.route('/find-sketch')
 def findSketch():
     return render_template('find-sketch.html', **get_user())
