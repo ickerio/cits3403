@@ -1,37 +1,66 @@
-
-//create timer
 const countdownTimer = document.getElementById('countdowntimer');
-let timeleft = 10;
+let timeLeft = 10;
+let timerRunning = true;
+let attempts = 0;
+let correct = false;
+let incorrectAlertShown = false;
+let oneMoreTryAlertShown = false;
 
+// Start the timer
 const downloadTimer = setInterval(() => {
-    timeleft--;
-    countdownTimer.textContent = timeleft;
-    if (timeleft <= 0) {
+    countdownTimer.textContent = timeLeft;
+    timeLeft--;
+
+    if (timeLeft < 0) {
         clearInterval(downloadTimer);
-        setTimeout(() =>{
-            alert("Time's up :( ");
-        }, 1000);
+        timerRunning = false;
+        if (!correct && !incorrectAlertShown) {
+            incorrectAlertShown = true;
+            setTimeout(() => {
+                alert("Time's up :( ");
+                document.getElementById('userguess').setAttribute('disabled', true); // disable input
+                document.getElementById('submitguessBtn').setAttribute('disabled', true); // disable button
+            }, 1000);
+        }
     }
 }, 1000);
 
-//stop timer
 document.getElementById("submitguessBtn").addEventListener("click", function() {
-    clearInterval(downloadTimer);
+    if (!timerRunning) return; // If time is up, do not evaluate
 
-//check if the guess is correct
+    // add the number of attempts
+    attempts++;
+
+    // check
+    checkGuess();
+});
+
+//check the guess
 function checkGuess() {
     var userGuess = document.getElementById('userguess').value;
-    var wordPlaceholder = document.getElementById('wordPlaceholder').textContent;
+    var wordPlaceholder = document.getElementById('wordPlaceholder').textContent // word/prompt that sketcher used to draw
     userGuess = userGuess.toLowerCase();
     wordPlaceholder = wordPlaceholder.toLowerCase();
     if (userGuess === wordPlaceholder) {
-        // action when correct NEED TO CHANGE*******
-        alert("correct");
+        // when correct
+        if (!correct) {
+            correct = true;
+            alert("Correct");
+            document.getElementById('userguess').setAttribute('disabled', true); // disable input
+            document.getElementById('submitguessBtn').setAttribute('disabled', true); // disable button
+            clearInterval(downloadTimer); // Stop the timer
+        }
     } else {
-        // action when incorrect NEED TO CHANGE******
-        alert("incorrect");
+        //  when incorrect
+        if (attempts === 1 && !oneMoreTryAlertShown) {
+            oneMoreTryAlertShown = true;
+            alert("Incorrect. You have one more try.");
+        } else if (attempts >= 2 && !incorrectAlertShown) {
+            incorrectAlertShown = true;
+            alert("Incorrect");
+            document.getElementById('userguess').setAttribute('disabled', true); // disable input
+            document.getElementById('submitguessBtn').setAttribute('disabled', true); // disable button
+            clearInterval(downloadTimer); // stop timer
+        }
     }
-    //clear userguess
-    document.getElementById('userguess').value = "";
 }
-                                                           
