@@ -8,7 +8,7 @@
 <div class="container">
     <h1>Time to guess!</h1>
     <div class="canvas-container">
-        <canvas id="drawnCanvas" width="500" height="500" style="border: 2px solid black;"></canvas>
+        <canvas id="drawnCanvas"></canvas>
     </div> 
     <div class="input">
         <input type="text" id="userguess" class="form-control" placeholder="Guess the sketch">
@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <p> Time remaining: <span id="countdown">10</span> Seconds</p>
+    <p> Time remaining: <span id="countdowntimer">10</span> Seconds</p>
 </div>
 {% endblock %}
 {% block scripts %}
