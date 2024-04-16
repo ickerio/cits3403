@@ -8,16 +8,21 @@
 <div class="container">
     <h1>Time to guess!</h1>
     <div class="canvas-container">
-        <canvas id="drawnCanvas"></canvas>
+        <canvas id="drawnCanvas" ></canvas>
     </div> 
     <div class="input">
-        <input type="text" id="userguess" class="form-control" placeholder="Guess the sketch">
-        <div class="input-group-append">
-            <button class="btn-primary" id="submitguessBtn" type="submit" onclick="checkGuess()">Submit</button>
-        </div>
+        <form id="guessForm" method="POST">
+            <div class="input">
+                <input type="text" id="userguess" name="userguess" class="form-control" placeholder="Guess The Sketch">
+                <div class="input-group-append">
+                    <button class="btn-primary" id="submitguessBtn" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
     </div>
-
-    <p> Time remaining: <span id="countdowntimer">10</span> Seconds</p>
+</div>
+<p id="countdownMessage" class="hidden">Time's Up!</p>
+<p id="countdowntext"> Time remaining: <span id="countdowntimer">10</span> Seconds</p>
 </div>
 {% endblock %}
 {% block scripts %}
