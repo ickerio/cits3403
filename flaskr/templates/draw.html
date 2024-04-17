@@ -1,10 +1,8 @@
 {% extends "layout.html" %}
-
-{% block title %}Draw Sketch{% endblock %}
-
+{% block title %}Draw{% endblock %}
 {% block head %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/draw-sketch.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/draw.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 {% endblock %}
 
@@ -37,7 +35,7 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', filename='js/draw-sketch.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/draw.js') }}"></script>
 {% endblock %}
 
 

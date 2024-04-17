@@ -15,7 +15,7 @@
                     {% if sketch.has_guessed %}
                         <p class="card-text">You guessed in 25s</p>
                     {% else %}
-                        <a href="#" class="btn btn-primary" role="button">Guess</a>
+                        <a href="/guess/{{ sketch.id }}" class="btn btn-primary" role="button">Guess</a>
                     {% endif %}
                     <p class="card-text"><small class="text-muted">{{ sketch.date }}</small></p>
                 </div>
