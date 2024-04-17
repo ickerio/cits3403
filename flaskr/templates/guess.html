@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}Guess{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/guess.css') }}">
+{% endblock %}
+{% block content %}
+        <h1>Time to guess!</h1>
+        <div class="canvas-container">
+            <canvas id="drawnCanvas" ></canvas>
+        </div> 
+        <div class="input">
+            <form action="/guess" method="POST">
+                <div class="input">
+                    <input type="text" id="userguess" name="userguess" class="form-control" placeholder="Guess The Sketch">
+                    <div class="input-group-append">
+                        <button class="btn-primary" id="submitguessBtn" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <p id="countdownMessage" class="hidden">Time's Up!</p>
+    <p id="countdowntext"> Time remaining: <span id="countdowntimer">10</span> Seconds</p>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/guess.js') }}"></script>
+{% endblock %}

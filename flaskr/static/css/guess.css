@@ -1,0 +1,28 @@
+h1 {
+    text-align: center;
+}
+
+.canvas-container {
+    margin-top: 20px; 
+}
+
+#drawnCanvas {
+    border: 2px solid black;
+    background-color: white;
+    max-width: 100%;
+    height: auto;
+    width: 100%; 
+}
+.input {
+    margin-top: 20px; 
+    text-align: center; 
+}
+
+p {
+    text-align: center;
+    margin-bottom: 10px; 
+}
+
+.hidden {
+    display: none;
+}
