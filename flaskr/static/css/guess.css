@@ -1,10 +1,4 @@
-.container {
-    margin: auto; 
-    max-width: 600px; 
-    padding: 20px; 
-}
-
-.container h1 {
+h1 {
     text-align: center;
 }
 
@@ -17,13 +11,12 @@
     background-color: white;
     max-width: 100%;
     height: auto;
-    width: 1000px; 
+    width: 100%; 
 }
 .input {
     margin-top: 20px; 
     text-align: center; 
 }
-
 
 p {
     text-align: center;
