@@ -1,5 +1,5 @@
 from flask import (
-    Flask, render_template,
+    Flask, render_template, request
 )
 
 app = Flask(__name__)
@@ -50,8 +50,14 @@ def login():
 def findSketch():
     return render_template('find-sketch.html', **get_user())
 
-@app.route('/guess')
+@app.route('/guess', methods=["GET"])
 def guessSketch():
+    return render_template('guess.html', **get_user())
+
+@app.route("/guess", methods=["POST"])
+def sessions():
+    userid  = request.form.get("userguess") # todo: check the user guess
+    print(userid)
     return render_template('guess.html', **get_user())
 
 @app.route('/draw-sketch')

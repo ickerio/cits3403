@@ -5,25 +5,23 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/guess.css') }}">
 {% endblock %}
 {% block content %}
-<div class="container">
-    <h1>Time to guess!</h1>
-    <div class="canvas-container">
-        <canvas id="drawnCanvas" ></canvas>
-    </div> 
-    <div class="input">
-        <form id="guessForm" method="POST">
-            <div class="input">
-                <input type="text" id="userguess" name="userguess" class="form-control" placeholder="Guess The Sketch">
-                <div class="input-group-append">
-                    <button class="btn-primary" id="submitguessBtn" type="submit">Submit</button>
+        <h1>Time to guess!</h1>
+        <div class="canvas-container">
+            <canvas id="drawnCanvas" ></canvas>
+        </div> 
+        <div class="input">
+            <form action="/guess" method="POST">
+                <div class="input">
+                    <input type="text" id="userguess" name="userguess" class="form-control" placeholder="Guess The Sketch">
+                    <div class="input-group-append">
+                        <button class="btn-primary" id="submitguessBtn" type="submit">Submit</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
-<p id="countdownMessage" class="hidden">Time's Up!</p>
-<p id="countdowntext"> Time remaining: <span id="countdowntimer">10</span> Seconds</p>
-</div>
+    <p id="countdownMessage" class="hidden">Time's Up!</p>
+    <p id="countdowntext"> Time remaining: <span id="countdowntimer">10</span> Seconds</p>
 {% endblock %}
 {% block scripts %}
     {{ super() }}
