@@ -72,20 +72,16 @@ def login():
 def signup():
     return render_template('signup.html', **get_user())
 
-@app.route('/find-sketch')
-def findSketch():
-    return render_template('find-sketch.html', **get_user())
-
-@app.route('/guess', methods=["GET"])
-def guessSketch():
+@app.route('/guess/<int:id>', methods=["GET"])
+def guess(id):
     return render_template('guess.html', **get_user())
 
-@app.route("/guess", methods=["POST"])
-def sessions():
+@app.route("/guess/<int:id>", methods=["POST"])
+def guessForm(id):
     userid  = request.form.get("userguess") # todo: check the user guess
     print(userid)
     return render_template('guess.html', **get_user())
 
-@app.route('/draw-sketch')
+@app.route('/draw')
 def drawSketch():
-    return render_template('draw-sketch.html', **get_user())
+    return render_template('draw.html', **get_user())
