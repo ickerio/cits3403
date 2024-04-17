@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% block title %}Leaderboard{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
+{% endblock %}
+{% block content %}
+    <h1>Stats for @{{username}}</h1>
+    <div class="stats-grid">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Place</h5>
+                <p class="card-text">#5</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Guessed</h5>
+                <p class="card-text">200</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Points</h5>
+                <p class="card-text">200</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">PPG (?)</h5>
+                <p class="card-text">200</p>
+            </div>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Username</th>
+                <th scope="col">Guessed</th>
+                <th scope="col">Points</th>
+                <th scope="col">PPG (?)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in leaderboard %}
+            <tr>
+                <th scope="row centered">
+                    {% if loop.index == 1 %}
+                        🥇
+                    {% elif loop.index == 2 %}
+                        🥈
+                    {% elif loop.index == 3 %}
+                        🥉
+                    {% else %}
+                        {{loop.index}}
+                    {% endif %}
+                </th>
+                <td>{{user.username}}</td>
+                <td>{{user.points}}</td>
+                <td>{{user.score}}</td>
+                <td>{{user.points_per_guess}}</td>
+            </tr>
+            <tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+{% endblock %}
