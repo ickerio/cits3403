@@ -1,6 +1,6 @@
 #wordPlaceholder { display: none; }
 #drawingCanvas { pointer-events: none; }
-#colorPicker { pointer-events: none; }
+.color-button { pointer-events: none; }
 #submitCanvas { pointer-events: none; }
 
 #drawingCanvas {
@@ -16,7 +16,7 @@
     width: 100%;
     padding-top: 46.25%;
     background-color: #000;
-    border: 3px solid black; /* Adds a blue border around the canvas wrapper */
+    border: 3px solid black; /* Adds a black border around the canvas wrapper */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
     border-radius: 8px; /* Rounds the corners of the canvas wrapper */
 }
@@ -37,18 +37,29 @@
     transform: translate(-50%, -50%); /* Offset the button by half its width and height to truly center it */
 }
 
-#colorPicker {
-    border: 2px solid black;
-    border-radius: 5px;
-    background-color: white;
-    transition: all 0.3s ease; /* Updated to animate all properties smoothly */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0); /* Initial state with no shadow */
+.color-button {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 2px;
+    position: relative; /* Ensures absolute positioning is relative to the button */
+    vertical-align: middle; /* Aligns buttons vertically */
+    border: 3px solid black; /* Adds a black border around the button */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
+    transition: transform 0.3s ease, filter 0.3s ease; 
 }
 
-#colorPicker:hover {
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5); /* Soft shadow for a subtle 3D effect */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-}
+.red { background-color: #FF0000; }
+.orange { background-color: #FFA500; }
+.yellow { background-color: #FFFF00; }
+.green { background-color: #008000; }
+.blue { background-color: #0000FF; }
+.indigo { background-color: #4B0082; }
+.violet { background-color: #EE82EE; }
+.brown { background-color: #8B4513; }
+.black { background-color: #000000; }
 
 #timerPlaceholder {
     display: inline-block;
@@ -58,4 +69,32 @@
 
 .timer-icon {
     margin-right: 15px; /* Maintain a consistent spacing */
+}
+
+.eraser {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 2px;
+    background-color: #FFFFFF; 
+    position: relative;
+}
+
+.eraser i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black; 
+}
+
+.eraser {
+    background-color: #FFFFFF; 
+}
+
+.color-button:hover {
+    transform: scale(1.1); /* Enlarges the button */
+    filter: brightness(85%); /* Darkens the button */
 }
