@@ -32,7 +32,7 @@ h1 {
     color: white;
 }
 
-#stopwatchDisplay, #successMessage {
+#stopwatchDisplay, #successMessage, #attemptsDisplay {
     text-align: center;
     margin-top: 20px;
     font-size: 20px;
@@ -50,4 +50,8 @@ h1 {
 
 .hidden {
     display: none;
+}
+
+#attemptsDisplay {
+    color: #007bff; /* You can adjust this color to fit your design */
 }

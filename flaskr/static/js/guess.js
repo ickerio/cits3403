@@ -3,14 +3,18 @@ const startGuessBtn = document.getElementById('startGuessBtn');
 const submitGuessBtn = document.getElementById('submitguessBtn');
 const successMessage = document.getElementById('successMessage');
 const drawnCanvas = document.getElementById('drawnCanvas');
+const attemptsDisplay = document.getElementById('attemptsDisplay'); // Element to display attempts
 let stopwatchInterval;
 let elapsedTime = 0; // Time in seconds
+let guessAttempts = 0; // Initialize guess attempts counter
 
 // Function to start the stopwatch
 function startStopwatch() {
     clearInterval(stopwatchInterval); // Clear any existing intervals
     elapsedTime = 0; // Reset stopwatch
+    guessAttempts = 0; // Reset guess attempts
     updateStopwatchDisplay(); // Immediately update the display
+    updateAttemptsDisplay(); // Update attempts display
     stopwatchInterval = setInterval(() => {
         elapsedTime++; // Increase every second
         updateStopwatchDisplay(); // Update the displayed time
@@ -27,12 +31,21 @@ function updateStopwatchDisplay() {
     stopwatchDisplay.textContent = `Tik! Tok! time is ticking! ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
-// Simulate stopping the stopwatch and displaying success on correct guess
+// Function to update guess attempts display
+function updateAttemptsDisplay() {
+    attemptsDisplay.textContent = `Guess attempts: ${guessAttempts}`;
+}
+
+// Simulate stopping the stopwatch, incrementing guess attempts, and displaying success on correct guess
 function handleGuessSubmission() {
+    guessAttempts++; // Increment guess attempts
+    updateAttemptsDisplay(); // Update attempts display
+
+    // Placeholder for checking the correctness of the guess
+    // If the guess is correct:
     clearInterval(stopwatchInterval); // Stop the stopwatch
     submitGuessBtn.setAttribute('disabled', true); // Disable the submit button
     successMessage.classList.remove('hidden'); // Show success message
-    // Here you can add logic to check if the guess is correct
 }
 
 startGuessBtn.addEventListener('click', function() {
