@@ -1,7 +1,7 @@
 $(document).ready(function() {
     let canvas = $('#drawingCanvas')[0];
     let ctx = canvas.getContext('2d');
-    let timeLeft = 10;
+    let timeLeft = 30;
     let timerInterval;
     let currentColor = '#000000'; // Default drawing color
     let painting = false;
@@ -9,15 +9,18 @@ $(document).ready(function() {
     // Function to disable/enable drawing and UI elements
     function toggleDrawing(enable) {
         $('#drawingCanvas').css('pointer-events', enable ? 'auto' : 'none');
-        $('#colorPicker').css('pointer-events', enable ? 'auto' : 'none');
+        $('.color-button').css('pointer-events', enable ? 'auto' : 'none');
         $('#submitCanvas').css('pointer-events', enable ? 'auto' : 'none');
         $('#wordPlaceholder').css('display', enable ? 'inline' : 'none');
     }
 
     // Function to start the drawing game
     function startGame() {
-        timeLeft = 10; // Reset the timer each time the game starts
+        timeLeft = 30; // Reset the timer each time the game starts
         clearInterval(timerInterval); // Clear any existing timer interval
+        ctx.strokeStyle = '#000000'; // Reset the color to black
+        ctx.lineWidth = 15;
+        ctx.globalCompositeOperation = 'source-over';
         toggleDrawing(true);
         $('#beginButton').hide(); // Hide the begin button
         timerInterval = setInterval(function() {
@@ -49,7 +52,7 @@ $(document).ready(function() {
 
         toggleDrawing(false); // Disable drawing after submission
         $('#beginButton').show(); // Show the begin button again for a new game
-        $('#timerPlaceholder').text("10"); // Reset the timer display
+        $('#timerPlaceholder').text("30"); // Reset the timer display
     }
 
     // Function to handle the start of a touch/draw
@@ -83,7 +86,6 @@ $(document).ready(function() {
         let mouseX = (clientX - bounds.left) * scaleX;
         let mouseY = (clientY - bounds.top) * scaleY;
 
-        ctx.lineWidth = 5;
         ctx.lineCap = 'round';
 
         ctx.lineTo(mouseX, mouseY);
@@ -103,10 +105,18 @@ $(document).ready(function() {
     $('#beginButton').on('click', fetchWordAndStartGame);
     $('#submitCanvas').on('click', submitDrawing);
 
-    // EventLister to update the currentColor when a new color is picked
-    $('#colorPicker').on('change', function() {
-        currentColor = $(this).val();
-        ctx.strokeStyle = currentColor; // Set the new color as the stroke style
+    // EventListener to update the currentColor when a new color is picked
+    $('.color-button').click(function() {
+        currentColor = $(this).css('background-color');
+        ctx.lineWidth = 15;
+        ctx.globalCompositeOperation = 'source-over'; // Set to normal drawing mode
+        ctx.strokeStyle = currentColor;
+    });
+
+    // EventListener to pick the eraser
+    $('.eraser').click(function() {
+        ctx.lineWidth = 75;
+        ctx.globalCompositeOperation = 'destination-out'; // Set to erase mode
     });
 
     // Both mouse and touch event listeners for drawing
