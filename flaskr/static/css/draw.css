@@ -16,7 +16,7 @@
     width: 100%;
     padding-top: 46.25%;
     background-color: #000;
-    border: 3px solid black; /* Adds a blue border around the canvas wrapper */
+    border: 3px solid black; /* Adds a black border around the canvas wrapper */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
     border-radius: 8px; /* Rounds the corners of the canvas wrapper */
 }
@@ -46,6 +46,8 @@
     margin: 2px;
     position: relative; /* Ensures absolute positioning is relative to the button */
     vertical-align: middle; /* Aligns buttons vertically */
+    border: 3px solid black; /* Adds a black border around the button */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
 }
 
 .red { background-color: #FF0000; }
@@ -55,6 +57,7 @@
 .blue { background-color: #0000FF; }
 .indigo { background-color: #4B0082; }
 .violet { background-color: #EE82EE; }
+.brown { background-color: #8B4513; }
 .black { background-color: #000000; }
 
 #timerPlaceholder {
