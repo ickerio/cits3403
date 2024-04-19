@@ -1,7 +1,7 @@
 $(document).ready(function() {
     let canvas = $('#drawingCanvas')[0];
     let ctx = canvas.getContext('2d');
-    let timeLeft = 10;
+    let timeLeft = 30;
     let timerInterval;
     let currentColor = '#000000'; // Default drawing color
     let painting = false;
@@ -9,14 +9,14 @@ $(document).ready(function() {
     // Function to disable/enable drawing and UI elements
     function toggleDrawing(enable) {
         $('#drawingCanvas').css('pointer-events', enable ? 'auto' : 'none');
-        $('#colorPicker').css('pointer-events', enable ? 'auto' : 'none');
+        $('.color-button').css('pointer-events', enable ? 'auto' : 'none');
         $('#submitCanvas').css('pointer-events', enable ? 'auto' : 'none');
         $('#wordPlaceholder').css('display', enable ? 'inline' : 'none');
     }
 
     // Function to start the drawing game
     function startGame() {
-        timeLeft = 10; // Reset the timer each time the game starts
+        timeLeft = 30; // Reset the timer each time the game starts
         clearInterval(timerInterval); // Clear any existing timer interval
         toggleDrawing(true);
         $('#beginButton').hide(); // Hide the begin button
@@ -49,7 +49,7 @@ $(document).ready(function() {
 
         toggleDrawing(false); // Disable drawing after submission
         $('#beginButton').show(); // Show the begin button again for a new game
-        $('#timerPlaceholder').text("10"); // Reset the timer display
+        $('#timerPlaceholder').text("30"); // Reset the timer display
     }
 
     // Function to handle the start of a touch/draw
@@ -104,9 +104,9 @@ $(document).ready(function() {
     $('#submitCanvas').on('click', submitDrawing);
 
     // EventLister to update the currentColor when a new color is picked
-    $('#colorPicker').on('change', function() {
-        currentColor = $(this).val();
-        ctx.strokeStyle = currentColor; // Set the new color as the stroke style
+    $('.color-button').click(function() {
+        currentColor = $(this).css('background-color');
+        ctx.strokeStyle = currentColor;
     });
 
     // Both mouse and touch event listeners for drawing

@@ -1,6 +1,6 @@
 #wordPlaceholder { display: none; }
 #drawingCanvas { pointer-events: none; }
-#colorPicker { pointer-events: none; }
+.color-button { pointer-events: none; }
 #submitCanvas { pointer-events: none; }
 
 #drawingCanvas {
@@ -37,18 +37,23 @@
     transform: translate(-50%, -50%); /* Offset the button by half its width and height to truly center it */
 }
 
-#colorPicker {
-    border: 2px solid black;
-    border-radius: 5px;
-    background-color: white;
-    transition: all 0.3s ease; /* Updated to animate all properties smoothly */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0); /* Initial state with no shadow */
+.color-button {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 2px;
 }
 
-#colorPicker:hover {
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5); /* Soft shadow for a subtle 3D effect */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-}
+.red { background-color: #FF0000; }
+.orange { background-color: #FFA500; }
+.yellow { background-color: #FFFF00; }
+.green { background-color: #008000; }
+.blue { background-color: #0000FF; }
+.indigo { background-color: #4B0082; }
+.violet { background-color: #EE82EE; }
+.black { background-color: #000000; }
 
 #timerPlaceholder {
     display: inline-block;
