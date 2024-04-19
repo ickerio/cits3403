@@ -19,7 +19,7 @@ $(document).ready(function() {
         timeLeft = 30; // Reset the timer each time the game starts
         clearInterval(timerInterval); // Clear any existing timer interval
         ctx.strokeStyle = '#000000'; // Reset the color to black
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 15;
         ctx.globalCompositeOperation = 'source-over';
         toggleDrawing(true);
         $('#beginButton').hide(); // Hide the begin button
@@ -108,7 +108,7 @@ $(document).ready(function() {
     // EventListener to update the currentColor when a new color is picked
     $('.color-button').click(function() {
         currentColor = $(this).css('background-color');
-        ctx.lineWidth = 5;
+        ctx.lineWidth = 15;
         ctx.globalCompositeOperation = 'source-over'; // Set to normal drawing mode
         ctx.strokeStyle = currentColor;
     });
