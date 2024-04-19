@@ -18,6 +18,9 @@ $(document).ready(function() {
     function startGame() {
         timeLeft = 30; // Reset the timer each time the game starts
         clearInterval(timerInterval); // Clear any existing timer interval
+        ctx.strokeStyle = '#000000'; // Reset the color to black
+        ctx.lineWidth = 5;
+        ctx.globalCompositeOperation = 'source-over';
         toggleDrawing(true);
         $('#beginButton').hide(); // Hide the begin button
         timerInterval = setInterval(function() {
@@ -83,7 +86,6 @@ $(document).ready(function() {
         let mouseX = (clientX - bounds.left) * scaleX;
         let mouseY = (clientY - bounds.top) * scaleY;
 
-        ctx.lineWidth = 5;
         ctx.lineCap = 'round';
 
         ctx.lineTo(mouseX, mouseY);
@@ -103,10 +105,18 @@ $(document).ready(function() {
     $('#beginButton').on('click', fetchWordAndStartGame);
     $('#submitCanvas').on('click', submitDrawing);
 
-    // EventLister to update the currentColor when a new color is picked
+    // EventListener to update the currentColor when a new color is picked
     $('.color-button').click(function() {
         currentColor = $(this).css('background-color');
+        ctx.lineWidth = 5;
+        ctx.globalCompositeOperation = 'source-over'; // Set to normal drawing mode
         ctx.strokeStyle = currentColor;
+    });
+
+    // EventListener to pick the eraser
+    $('.eraser').click(function() {
+        ctx.lineWidth = 75;
+        ctx.globalCompositeOperation = 'destination-out'; // Set to erase mode
     });
 
     // Both mouse and touch event listeners for drawing
