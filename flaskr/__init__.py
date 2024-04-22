@@ -83,5 +83,5 @@ def guessForm(id):
     return render_template('guess.html', **get_user())
 
 @app.route('/draw')
-def drawSketch():
+def draw():
     return render_template('draw.html', **get_user())
