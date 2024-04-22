@@ -1,6 +1,7 @@
 const stopwatchDisplay = document.getElementById('stopwatchDisplay');
 const startGuessBtn = document.getElementById('startGuessBtn');
 const submitGuessBtn = document.getElementById('submitguessBtn');
+const guessInput = document.getElementById('userguess'); // Get the guess input field
 const successMessage = document.getElementById('successMessage');
 const drawnCanvas = document.getElementById('drawnCanvas');
 const attemptsDisplay = document.getElementById('attemptsDisplay'); // Element to display attempts
@@ -8,8 +9,8 @@ let stopwatchInterval;
 let elapsedTime = 0; // Time in seconds
 let guessAttempts = 0; // Initialize guess attempts counter
 
-// Function to start the stopwatch
-function startStopwatch() {
+// Function to start the game and stopwatch
+function startGame() {
     clearInterval(stopwatchInterval); // Clear any existing intervals
     elapsedTime = 0; // Reset stopwatch
     guessAttempts = 0; // Reset guess attempts
@@ -20,6 +21,7 @@ function startStopwatch() {
         updateStopwatchDisplay(); // Update the displayed time
     }, 1000);
     submitGuessBtn.removeAttribute('disabled'); // Enable the submit button
+    guessInput.disabled = false; // Enable the guess input field
     drawnCanvas.style.filter = "none"; // Remove blur from the canvas
 }
 
@@ -36,21 +38,26 @@ function updateAttemptsDisplay() {
     attemptsDisplay.textContent = `Guess Attempts: ${guessAttempts}`;
 }
 
-// Simulate stopping the stopwatch, incrementing guess attempts, and displaying success on correct guess
-function handleGuessSubmission() {
+// Handle guess submission, incrementing guess attempts
+function handleGuessSubmission(event) {
+    event.preventDefault(); // Prevent form default submission
     guessAttempts++; // Increment guess attempts
     updateAttemptsDisplay(); // Update attempts display
 
-    // Placeholder for checking the correctness of the guess
-    // If the guess is correct:
-    clearInterval(stopwatchInterval); // Stop the stopwatch
-    submitGuessBtn.setAttribute('disabled', true); // Disable the submit button
-    successMessage.classList.remove('hidden'); // Show success message
+    // Here, you'll implement checking the correctness of the guess against the backend database
+    // Placeholder for correctness check:
+    const isCorrect = false; // This should be replaced with actual correctness checking logic
+
+    if (isCorrect) {
+        clearInterval(stopwatchInterval); // Stop the stopwatch
+        submitGuessBtn.setAttribute('disabled', true); // Disable the submit button
+        guessInput.disabled = true; // Disable further guesses
+        successMessage.classList.remove('hidden'); // Show success message
+    }
+
+    // Clear the input after each guess
+    guessInput.value = '';
 }
 
-startGuessBtn.addEventListener('click', function() {
-    startGuessBtn.classList.add('hidden'); // Hide the start button
-    startStopwatch();
-});
-
+startGuessBtn.addEventListener('click', startGame);
 submitGuessBtn.addEventListener('click', handleGuessSubmission);
