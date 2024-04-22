@@ -28,12 +28,12 @@ function updateStopwatchDisplay() {
     const hours = Math.floor(elapsedTime / 3600);
     const minutes = Math.floor((elapsedTime % 3600) / 60);
     const seconds = elapsedTime % 60;
-    stopwatchDisplay.textContent = `Tik! Tok! time is ticking! ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    stopwatchDisplay.textContent = `Tik! Tok! Time is Ticking! ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
 // Function to update guess attempts display
 function updateAttemptsDisplay() {
-    attemptsDisplay.textContent = `Guess attempts: ${guessAttempts}`;
+    attemptsDisplay.textContent = `Guess Attempts: ${guessAttempts}`;
 }
 
 // Simulate stopping the stopwatch, incrementing guess attempts, and displaying success on correct guess
