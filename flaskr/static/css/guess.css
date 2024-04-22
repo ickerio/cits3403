@@ -32,7 +32,7 @@ h1 {
     color: white;
 }
 
-#stopwatchDisplay, #successMessage, #attemptsDisplay {
+#stopwatchDisplay, #successMessage, #attemptsDisplay, #feedbackMessage {
     text-align: center;
     margin-top: 20px;
     font-size: 20px;
@@ -41,6 +41,11 @@ h1 {
 
 #successMessage {
     color: #28a745; /* Success message in a noticeable color */
+}
+
+#feedbackMessage {
+    color: red; /* Make the feedback message red */
+    /* Removed vivid effect animation */
 }
 
 .input, .input-group-append {
@@ -53,5 +58,5 @@ h1 {
 }
 
 #attemptsDisplay {
-    color: #007bff; /* You can adjust this color to fit your design */
+    color: #007bff; /* Adjust this color to fit your design */
 }
