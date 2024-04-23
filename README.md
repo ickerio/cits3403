@@ -23,7 +23,7 @@ TODO a brief summary of the architecture of the application.
 
 1. install python3
 2. install pip3 with `sudo apt install python3-pip`
-3. install requirements with `pip install -r requirements.txt`
+3. in new virtual environment, install requirements with `pip install -r requirements.txt`
 3. run flask with `flask run`
 
 ### Testing
