@@ -1,8 +1,8 @@
-from flask import (
-    Flask, render_template, request
-)
+from flask import render_template
+from app import app
 
-app = Flask(__name__)
+#Note: Should use get url function in render_template()
+#      -> Best not to hardcode the file name
 
 def get_user():
     return {
