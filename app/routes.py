@@ -1,6 +1,6 @@
 from flask import render_template, jsonify
 from app import app, db
-from .models import Word
+from app.models import Word
 import random
 import os
 
