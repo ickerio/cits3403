@@ -27,7 +27,7 @@ TODO a brief summary of the architecture of the application.
 4. create new virtual environment with `python3 -m venv venv`
 5. activate virtual environment with `source venv/bin/activate`
 6. install requirements with `pip install -r requirements.txt`
-3. run flask with `flask run`
+7. run flask with `flask run`
 
 ### Testing
 
