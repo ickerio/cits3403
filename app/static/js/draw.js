@@ -33,12 +33,22 @@ $(document).ready(function() {
         }, 1000);
     }
 
-    // Function to fetch word to draw (not implemented) and place in DOM
+    // Function to fetch word to draw and place in DOM
     function fetchWordAndStartGame() {
-        let word = "Banana"; // Placeholder, need to fetch and handle errors appropriately
-        $('#wordPlaceholder').text(word);
-        startGame();
-    }    
+        $.ajax({
+            url: '/get-word',
+            type: 'GET',
+            success: function(response) {
+                let word = response.word;  // Get the word from the response
+                $('#wordPlaceholder').text(word);
+                startGame();
+            },
+            error: function() {
+                $('#wordPlaceholder').text("Error fetching word");
+                console.error("Failed to fetch word");
+            }
+        });
+    }       
 
     // Function to handle the drawing submission
     function submitDrawing() {
