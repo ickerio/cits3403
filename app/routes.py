@@ -1,5 +1,8 @@
-from flask import render_template
-from app import app
+from flask import render_template, jsonify
+from app import app, db
+from app.models import Word
+import random
+import os
 
 #Note: Should use get url function in render_template()
 #      -> Best not to hardcode the file name
@@ -10,6 +13,19 @@ def get_user():
         'first_name': 'John',
         'last_name': 'Doe',
     }
+
+@app.route('/get-word')
+def get_word():
+    try:
+        word_count = Word.query.count()
+        if word_count:
+            random_id = random.randint(1, word_count)
+            word = Word.query.get(random_id)
+            if word:
+                return jsonify(word=word.word)
+        return jsonify(word="No words available"), 404
+    except Exception as e:
+        return jsonify(error=str(e)), 500
 
 @app.route('/')
 def index():
