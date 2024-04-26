@@ -1,6 +1,6 @@
-from flask import render_template, jsonify
+from flask import render_template, jsonify, request, redirect, url_for, session
 from app import app, db
-from app.models import Word
+from app.models import Word, User
 import random
 import os
 
@@ -73,10 +73,22 @@ def leaderboard():
         })
     return render_template('leaderboard.html', leaderboard=leaderboard_data)
 
-
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html', **get_user())
+    if request.method == 'POST':
+        # secure check of login credentials
+        if login_successful:
+            session['user_id'] = user.id
+            return redirect(url_for('index'))  #use redirect to index page after successful login
+        else:
+            return render_template('login.html', error="Sorry! Invalid username or password")  # render login page with error message
+    else:
+        return render_template('login.html')  #render login page for GET requests
+
+
+"""@app.route('/login')
+def login():
+    return render_template('login.html', **get_user())"""
 
 @app.route('/signup')
 def signup():
