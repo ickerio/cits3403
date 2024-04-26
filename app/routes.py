@@ -60,25 +60,19 @@ def index():
 
 @app.route('/leaderboard')
 def leaderboard():
-    # Get top 200 from DB
-    users = [
-        {
-            'id': 1,
-            'username': 'someranomduser',
-            'guessed': 5,
-            'score': 25,
-            'points_per_guess': 5,
-        },
-        {
-            'id': 1,
-            'username': 'someotheruser',
-            'guessed': 8,
-            'points': 24,
-            'points_per_guess': 3,
-        },
-    ]
+    leaderboard = User.query.order_by(User.points.desc()).limit(200).all() #get descending so top 200
+    #pass to the template
+    leaderboard_data = [] #build structure to render
+    for index, user in enumerate(leaderboard, start=1):
+        leaderboard_data.append({
+            'rank': index,
+            'username': user.username,
+            'guessed': user.guessed,
+            'points': user.points,
+            'points_per_guess': user.ppg  
+        })
+    return render_template('leaderboard.html', leaderboard=leaderboard_data)
 
-    return render_template('leaderboard.html', **get_user(), leaderboard=users * 100)
 
 @app.route('/login')
 def login():
