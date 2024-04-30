@@ -1,6 +1,6 @@
 from flask import render_template, jsonify
 from app import app, db
-from app.models import Word
+from app.models import Word, User
 import random
 import os
 
@@ -60,25 +60,8 @@ def index():
 
 @app.route('/leaderboard')
 def leaderboard():
-    # Get top 200 from DB
-    users = [
-        {
-            'id': 1,
-            'username': 'someranomduser',
-            'guessed': 5,
-            'score': 25,
-            'points_per_guess': 5,
-        },
-        {
-            'id': 1,
-            'username': 'someotheruser',
-            'guessed': 8,
-            'points': 24,
-            'points_per_guess': 3,
-        },
-    ]
-
-    return render_template('leaderboard.html', **get_user(), leaderboard=users * 100)
+    leaderboard = db.session.execute(db.select(User).order_by(User.points).limit(200)).scalars()
+    return render_template('leaderboard.html', **get_user(), leaderboard=leaderboard)
 
 @app.route('/login')
 def login():

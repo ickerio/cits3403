@@ -58,9 +58,9 @@
                     {% endif %}
                 </th>
                 <td>{{user.username}}</td>
+                <td>{{user.guessed}}</td>
                 <td>{{user.points}}</td>
-                <td>{{user.score}}</td>
-                <td>{{user.points_per_guess}}</td>
+                <td>{{user.points / user.guessed if user.guessed else 0}}</td>
             </tr>
             <tr>
             {% endfor %}
