@@ -5,7 +5,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 {% endblock %}
 {% block content %}
-    <h1>Welcome back {{ first_name }} {{ last_name }}</h1>
+    {% if current_user.is_authenticated %}
+        <h1>Welcome back {{ current_user.first_name }} {{ current_user.last_name }}</h1>
+    {% endif %}
     <div class="card-grid">
         {% for sketch in sketches %}
             <div class="card">
