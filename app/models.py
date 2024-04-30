@@ -9,7 +9,6 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     guessed = db.Column(db.Integer, default=0)
     points = db.Column(db.Integer, default=0)
-    ppg = db.Column(db.Float, default=0.0)  # Points per guess
 
     sketches = db.relationship('Sketch', backref='author', lazy='dynamic')
 
