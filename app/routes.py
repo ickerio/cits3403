@@ -1,6 +1,6 @@
 from flask import render_template, jsonify, request
 from app import app, db
-from app.models import Word, User
+from app.models import Word, User, GuessSession
 import random
 import os
 
@@ -75,30 +75,46 @@ def signup():
 def guess(id):
     return render_template('guess.html', **get_user())
 
-
 @app.route("/guess/<int:id>", methods=["POST"])
 def guessForm(id):
     user_guess = request.form.get("userguess")
     sketch = Sketch.query.get(id)
-    #get user guess and the assigned word
-    
+    user = get_user()
+
+    submit_disabled = False  #initialize submit button state
+
     #check if the user's guess matches the word associated with the sketch
-    if user_guess.lower() == sketch.word.word.lower():  #case-insensitive comparison
-        #update the user's points if the guess is correct
-        user = get_user()  #assuming you have a function to get the current user
-        user.points += 1  #increment points for correct guess
-        db.session.commit()  #save the updated points to the database
+    if user_guess.lower() == sketch.word.word.lower():
+        guess_session = GuessSession.query.filter_by(user_id=user.id, sketch_id=sketch.id).first()
 
-        #provide feedback to the user about the correct guess
-        #Maybe discuss better way for message if time
-        feedback_message = "Congratulations! Your guess is correct."
+        if guess_session: #if this is not first attempt
+            feedback_message = "Correct! Good Job"
+            submit_disabled = True  # Disable submit button after correct guess
+            user.points += 2  # Increment points for correct guess on second attempt
+        else:
+            guess_session = GuessSession(user_id=user.id, sketch_id=sketch.id)
+            db.session.add(guess_session)
+            db.session.commit()
+
+            feedback_message = "Fantastic! You got it correct on the first try"
+            submit_disabled = True  # Disable submit button after correct guess on first attempt
+            user.points += 5  # Increment points for correct guess on first attempt
     else:
-        #provide feedback to the user to try again
-        feedback_message = "Sorry, your guess is incorrect"
+        guess_session = GuessSession.query.filter_by(user_id=user.id, sketch_id=sketch.id).first()
 
-    #render the guess page with the feedback message and the sketch path
-    return render_template('guess.html', **get_user(), feedback_message=feedback_message, sketch_path=sketch.sketch_path)
+        if guess_session:
+            feedback_message = "Incorrect! Sorry you have no more guesses"
+            submit_disabled = True  # Disable submit button after incorrect guess on second attempt
+        else:
+            guess_session = GuessSession(user_id=user.id, sketch_id=sketch.id)
+            db.session.add(guess_session)
+            db.session.commit()
 
+            feedback_message = "Wrong guess! Don't worry you have one more chance left. Choose wisely"
+
+    db.session.commit()  # Save the updated user points
+
+    return render_template('guess.html', **get_user(), feedback_message=feedback_message, sketch_path=sketch.sketch_path, submit_disabled=submit_disabled)
 
 @app.route('/draw')
 def draw():
