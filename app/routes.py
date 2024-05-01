@@ -1,4 +1,4 @@
-from flask import render_template, jsonify
+from flask import render_template, jsonify, request
 from app import app, db
 from app.models import Word, User
 import random
@@ -75,11 +75,30 @@ def signup():
 def guess(id):
     return render_template('guess.html', **get_user())
 
+
 @app.route("/guess/<int:id>", methods=["POST"])
 def guessForm(id):
-    userid  = request.form.get("userguess") # todo: check the user guess
-    print(userid)
-    return render_template('guess.html', **get_user())
+    user_guess = request.form.get("userguess")
+    sketch = Sketch.query.get(id)
+    #get user guess and the assigned word
+    
+    #check if the user's guess matches the word associated with the sketch
+    if user_guess.lower() == sketch.word.word.lower():  #case-insensitive comparison
+        #update the user's points if the guess is correct
+        user = get_user()  #assuming you have a function to get the current user
+        user.points += 1  #increment points for correct guess
+        db.session.commit()  #save the updated points to the database
+
+        #provide feedback to the user about the correct guess
+        #Maybe discuss better way for message if time
+        feedback_message = "Congratulations! Your guess is correct."
+    else:
+        #provide feedback to the user to try again
+        feedback_message = "Sorry, your guess is incorrect"
+
+    #render the guess page with the feedback message and the sketch path
+    return render_template('guess.html', **get_user(), feedback_message=feedback_message, sketch_path=sketch.sketch_path)
+
 
 @app.route('/draw')
 def draw():
