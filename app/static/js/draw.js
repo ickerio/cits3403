@@ -36,7 +36,7 @@ $(document).ready(function() {
     // Function to fetch word to draw and place in DOM
     function fetchWordAndStartGame() {
         $.ajax({
-            url: '/get-word',
+            url: '/begin-draw',
             type: 'GET',
             success: function(response) {
                 let word = response.word;  // Get the word from the response
@@ -50,19 +50,40 @@ $(document).ready(function() {
         });
     }       
 
-    // Function to handle the drawing submission
     function submitDrawing() {
         clearInterval(timerInterval); // Ensure to clear the interval on submission
         let dataURL = canvas.toDataURL();
         let img = $('<img>').attr('src', dataURL).on('load', function() {
             $('body').append(img); // Append the submitted drawing somewhere on the page (placeholder functionality, need to send somewhere)
         });
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-
-        toggleDrawing(false); // Disable drawing after submission
-        $('#beginButton').show(); // Show the begin button again for a new game
-        $('#timerPlaceholder').text("30"); // Reset the timer display
+    
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+        // Disable drawing after submission
+        toggleDrawing(false);
+    
+        // Show the begin button again for a new game
+        $('#beginButton').show();
+    
+        // Reset the timer display
+        $('#timerPlaceholder').text("30");
+    
+        // Send the drawing data to the server
+        $.ajax({
+            url: '/submit-draw',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ image: dataURL }),
+            success: function(response) {
+                console.log('Submission successful:', response);
+                // Optionally display a message to the user or handle the response further
+            },
+            error: function(xhr, status, error) {
+                console.error('Submission failed:', xhr.responseText);
+                // Optionally handle the error, like displaying a message to the user
+            }
+        });
     }
 
     // Function to handle the start of a touch/draw

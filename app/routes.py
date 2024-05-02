@@ -1,9 +1,10 @@
-from flask import render_template, jsonify, flash, redirect, url_for
+from flask import render_template, jsonify, flash, redirect, url_for, session
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db, login_manager, bcrypt
 from app.models import Word, User
 from app.forms import login_form, signup_form
 import random
+import time
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -126,16 +127,33 @@ def guessForm(id):
 def draw():
     return render_template('draw.html')
 
-@app.route('/get-word')
+@app.route('/begin-draw', methods=["GET"])
 @login_required
-def get_word():
+def begin_draw():
     try:
         word_count = Word.query.count()
         if word_count:
             random_id = random.randint(1, word_count)
             word = Word.query.get(random_id)
             if word:
-                return jsonify(word=word.word)
-        return jsonify(word="No words available"), 404
+                # start drawing session
+                session['start_time'] = time.time()
+                session['word_to_draw'] = word.word  # Store the word in the session
+                return jsonify(status="success", word=word.word)
+        return jsonify(status="error", message="No words available"), 404
     except Exception as e:
-        return jsonify(error=str(e)), 500
+        return jsonify(status="error", message=str(e)), 500
+    
+@app.route('/submit-draw', methods=["POST"])
+@login_required
+def submit_draw():
+    if 'start_time' not in session or 'word_to_draw' not in session:
+        return jsonify(status="error", message="Session not started or corrupted"), 400
+    
+    elapsed_time = time.time() - session['start_time']
+    if elapsed_time > 30:
+        return jsonify(status="error", message="Time expired"), 400
+
+    word_to_draw = session['word_to_draw']
+    # Here, process the drawing submission and validate it as needed
+    return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=word_to_draw)
