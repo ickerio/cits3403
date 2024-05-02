@@ -43,8 +43,18 @@ def index():
 @app.route('/leaderboard')
 @login_required
 def leaderboard():
-    leaderboard = db.session.execute(db.select(User).order_by(User.points).limit(200)).scalars()
-    return render_template('leaderboard.html', leaderboard=leaderboard)
+    # Fetch the leaderboard, ensuring it's in descending order by points
+    leaderboard = db.session.execute(
+        db.select(User).order_by(User.points.desc()).limit(200)
+    ).scalars().all()  # Make sure to convert to list if necessary
+
+    # Calculate the rank of the current user
+    current_user_rank = next(
+        (index + 1 for index, user in enumerate(leaderboard) if user.id == current_user.id),
+        None
+    )
+
+    return render_template('leaderboard.html', leaderboard=leaderboard, current_user_rank=current_user_rank)
 
 @app.route('/login', methods=("GET", "POST"))
 def login():
@@ -91,7 +101,7 @@ def signup():
     
             db.session.add(new_user)
             db.session.commit()
-            return redirect(url_for("index"))
+            return redirect(url_for("login"))
         except Exception as e:
             flash(e, "danger")
 

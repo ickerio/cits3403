@@ -10,25 +10,25 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Place</h5>
-                <p class="card-text">#5</p>
+                <p class="card-text">#{{current_user_rank}}</p>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Guessed</h5>
-                <p class="card-text">200</p>
+                <p class="card-text">{{current_user.guessed}}</p>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Points</h5>
-                <p class="card-text">200</p>
+                <p class="card-text">{{current_user.points}}</p>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">PPG (?)</h5>
-                <p class="card-text">200</p>
+                <p class="card-text">{{current_user.points / current_user.guessed if current_user.guessed else 0}}</p>
             </div>
         </div>
     </div>
