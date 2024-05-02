@@ -1,31 +1,13 @@
-from flask import render_template, jsonify
-from app import app, db
+from flask import render_template, jsonify, flash, redirect, url_for
+from flask_login import login_user, logout_user, login_required, current_user
+from app import app, db, login_manager, bcrypt
 from app.models import Word, User
+from app.forms import login_form, signup_form
 import random
-import os
 
-#Note: Should use get url function in render_template()
-#      -> Best not to hardcode the file name
-
-def get_user():
-    return {
-        'username': 'johndoe',
-        'first_name': 'John',
-        'last_name': 'Doe',
-    }
-
-@app.route('/get-word')
-def get_word():
-    try:
-        word_count = Word.query.count()
-        if word_count:
-            random_id = random.randint(1, word_count)
-            word = Word.query.get(random_id)
-            if word:
-                return jsonify(word=word.word)
-        return jsonify(word="No words available"), 404
-    except Exception as e:
-        return jsonify(error=str(e)), 500
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.get(User, user_id)
 
 @app.route('/')
 def index():
@@ -56,31 +38,104 @@ def index():
         }
     ]
 
-    return render_template('index.html', **get_user(), sketches=sketches)
+    return render_template('index.html', sketches=sketches)
 
 @app.route('/leaderboard')
+@login_required
 def leaderboard():
-    leaderboard = db.session.execute(db.select(User).order_by(User.points).limit(200)).scalars()
-    return render_template('leaderboard.html', **get_user(), leaderboard=leaderboard)
+    # Fetch the leaderboard, ensuring it's in descending order by points
+    leaderboard = db.session.execute(
+        db.select(User).order_by(User.points.desc()).limit(200)
+    ).scalars().all()  # Make sure to convert to list if necessary
 
-@app.route('/login')
+    # Calculate the rank of the current user
+    current_user_rank = next(
+        (index + 1 for index, user in enumerate(leaderboard) if user.id == current_user.id),
+        None
+    )
+
+    return render_template('leaderboard.html', leaderboard=leaderboard, current_user_rank=current_user_rank)
+
+@app.route('/login', methods=("GET", "POST"))
 def login():
-    return render_template('login.html', **get_user())
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
 
-@app.route('/signup')
+    form = login_form()
+
+    if form.validate_on_submit():
+        try:
+            user = db.session.execute(db.select(User).where(User.email == form.email.data).limit(1)).scalar()
+            if bcrypt.check_password_hash(user.pwd, form.pwd.data):
+                login_user(user)
+                return redirect(url_for('index'))
+            else:
+                flash("Invalid usnermae or password!", "danger")
+        except Exception as e:
+            flash(e, "danger")
+
+    return render_template('auth.html', form=form)
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/signup', methods=("GET", "POST"))
 def signup():
-    return render_template('signup.html', **get_user())
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
 
+    form = signup_form()
+
+    if form.validate_on_submit():
+        try:
+            new_user = User(
+                username = form.username.data,
+                email = form.email.data,
+                first_name = form.first_name.data,
+                last_name = form.last_name.data,
+                pwd = bcrypt.generate_password_hash(form.pwd.data),
+            )
+    
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for("login"))
+        except Exception as e:
+            flash(e, "danger")
+
+    return render_template('auth.html', form=form)
+
+
+# TODO: redo with Flask-Forms, as per above 
 @app.route('/guess/<int:id>', methods=["GET"])
+@login_required
 def guess(id):
-    return render_template('guess.html', **get_user())
+    return render_template('guess.html')
 
 @app.route("/guess/<int:id>", methods=["POST"])
+@login_required
 def guessForm(id):
     userid  = request.form.get("userguess") # todo: check the user guess
     print(userid)
-    return render_template('guess.html', **get_user())
+    return render_template('guess.html')
 
 @app.route('/draw')
+@login_required
 def draw():
-    return render_template('draw.html', **get_user())
+    return render_template('draw.html')
+
+@app.route('/get-word')
+@login_required
+def get_word():
+    try:
+        word_count = Word.query.count()
+        if word_count:
+            random_id = random.randint(1, word_count)
+            word = Word.query.get(random_id)
+            if word:
+                return jsonify(word=word.word)
+        return jsonify(word="No words available"), 404
+    except Exception as e:
+        return jsonify(error=str(e)), 500

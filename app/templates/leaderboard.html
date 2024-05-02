@@ -5,30 +5,30 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
 {% endblock %}
 {% block content %}
-    <h1>Stats for @{{username}}</h1>
+    <h1>Stats for @{{ current_user.username }}</h1>
     <div class="stats-grid">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Place</h5>
-                <p class="card-text">#5</p>
+                <p class="card-text">#{{current_user_rank}}</p>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Guessed</h5>
-                <p class="card-text">200</p>
+                <p class="card-text">{{current_user.guessed}}</p>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Points</h5>
-                <p class="card-text">200</p>
+                <p class="card-text">{{current_user.points}}</p>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">PPG (?)</h5>
-                <p class="card-text">200</p>
+                <p class="card-text">{{current_user.points / current_user.guessed if current_user.guessed else 0}}</p>
             </div>
         </div>
     </div>
