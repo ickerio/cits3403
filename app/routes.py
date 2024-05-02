@@ -1,10 +1,12 @@
-from flask import render_template, jsonify, flash, redirect, url_for, session
+from flask import render_template, jsonify, flash, redirect, url_for, session, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db, login_manager, bcrypt
-from app.models import Word, User
+from app.models import Word, User, Sketch
 from app.forms import login_form, signup_form
 import random
 import time
+import base64
+import os
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -138,7 +140,7 @@ def begin_draw():
             if word:
                 # start drawing session
                 session['start_time'] = time.time()
-                session['word_to_draw'] = word.word  # Store the word in the session
+                session['word_to_draw'] = word  # Store the word in the session
                 return jsonify(status="success", word=word.word)
         return jsonify(status="error", message="No words available"), 404
     except Exception as e:
@@ -151,9 +153,33 @@ def submit_draw():
         return jsonify(status="error", message="Session not started or corrupted"), 400
     
     elapsed_time = time.time() - session['start_time']
-    if elapsed_time > 30:
+    if elapsed_time > 30: # what if it takes while to send to server, might breach 30s?
         return jsonify(status="error", message="Time expired"), 400
-
-    word_to_draw = session['word_to_draw']
-    # Here, process the drawing submission and validate it as needed
-    return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=word_to_draw)
+    
+    # Decode and save the image
+    image_data = request.json.get('image')
+    if not image_data:
+        return jsonify(status="error", message="No image data provided"), 400
+    
+    # Strip header from data URL
+    header, encoded = image_data.split(',', 1)
+    data = base64.b64decode(encoded)
+    
+    # Define the directory and filename
+    directory = "/static/sketches"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    
+    filename = f"{current_user.id}_{int(time.time())}.png"
+    filepath = os.path.join(directory, filename)
+    
+    # Save the file
+    with open(filepath, "wb") as f:
+        f.write(data)
+    
+    # Create a database entry
+    sketch = Sketch(sketch_path=filepath, user_id=current_user.id, word_id=session['word_to_draw'].id) # this could be wrong
+    db.session.add(sketch)
+    db.session.commit()
+    
+    return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=session['word_to_draw'].word) # this could be wrong
