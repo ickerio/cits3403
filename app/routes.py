@@ -140,7 +140,7 @@ def begin_draw():
             if word:
                 # start drawing session
                 session['start_time'] = time.time()
-                session['word_to_draw'] = word  # Store the word in the session
+                session['word_to_draw'] = word.word  # Store the word in the session
                 return jsonify(status="success", word=word.word)
         return jsonify(status="error", message="No words available"), 404
     except Exception as e:
@@ -153,8 +153,8 @@ def submit_draw():
         return jsonify(status="error", message="Session not started or corrupted"), 400
     
     elapsed_time = time.time() - session['start_time']
-    if elapsed_time > 30: # what if it takes while to send to server, might breach 30s?
-        return jsonify(status="error", message="Time expired"), 400
+    #if elapsed_time > 30: # what if it takes while to send to server, might breach 30s?
+    #    return jsonify(status="error", message="Time expired"), 400
     
     # Decode and save the image
     image_data = request.json.get('image')
@@ -166,7 +166,7 @@ def submit_draw():
     data = base64.b64decode(encoded)
     
     # Define the directory and filename
-    directory = "/static/sketches"
+    directory = "app/static/sketches"
     if not os.path.exists(directory):
         os.makedirs(directory)
     
@@ -177,9 +177,12 @@ def submit_draw():
     with open(filepath, "wb") as f:
         f.write(data)
     
+    # Get word_id
+    word_id = Word.query.filter_by(word=session['word_to_draw']).first().id   
+
     # Create a database entry
-    sketch = Sketch(sketch_path=filepath, user_id=current_user.id, word_id=session['word_to_draw'].id) # this could be wrong
+    sketch = Sketch(sketch_path=filepath, user_id=current_user.id, word_id=word_id) # this could be wrong
     db.session.add(sketch)
     db.session.commit()
     
-    return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=session['word_to_draw'].word) # this could be wrong
+    return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=session['word_to_draw']) # this could be wrong
