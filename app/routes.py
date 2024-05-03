@@ -165,11 +165,17 @@ def submit_draw():
     header, encoded = image_data.split(',', 1)
     data = base64.b64decode(encoded)
     
-    # Define the directory and filename
     directory = "app/static/sketches"
     if not os.path.exists(directory):
         os.makedirs(directory)
     
+    # Check if the canvas is blank
+    blankpath = os.path.join(directory, "blank.png")
+    with open(blankpath, "rb") as f:
+        blankdata = f.read()
+        if data == blankdata:
+            return jsonify(status="error", message="Blank canvas provided"), 400
+
     filename = f"{current_user.id}_{int(time.time())}.png"
     filepath = os.path.join(directory, filename)
     
