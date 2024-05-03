@@ -153,8 +153,8 @@ def submit_draw():
         return jsonify(status="error", message="Session not started or corrupted"), 400
     
     elapsed_time = time.time() - session['start_time']
-    #if elapsed_time > 30: # what if it takes while to send to server, might breach 30s?
-    #    return jsonify(status="error", message="Time expired"), 400
+    if elapsed_time > 33: # allowing 3s buffer for bad network delay
+        return jsonify(status="error", message="Time expired"), 400
     
     # Decode and save the image
     image_data = request.json.get('image')
