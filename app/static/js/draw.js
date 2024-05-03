@@ -53,9 +53,6 @@ $(document).ready(function() {
     function submitDrawing() {
         clearInterval(timerInterval); // Ensure to clear the interval on submission
         let dataURL = canvas.toDataURL();
-        let img = $('<img>').attr('src', dataURL).on('load', function() {
-            $('body').append(img); // Append the submitted drawing somewhere on the page (placeholder functionality, need to send somewhere)
-        });
     
         // Clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);

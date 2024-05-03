@@ -139,8 +139,8 @@ def begin_draw():
             word = Word.query.get(random_id)
             if word:
                 # start drawing session
-                session['start_time'] = time.time()
-                session['word_to_draw'] = word.word  # Store the word in the session
+                session['draw_start_time'] = time.time()
+                session['draw_word'] = word.word  # Store the word in the session
                 return jsonify(status="success", word=word.word)
         return jsonify(status="error", message="No words available"), 404
     except Exception as e:
@@ -149,10 +149,10 @@ def begin_draw():
 @app.route('/submit-draw', methods=["POST"])
 @login_required
 def submit_draw():
-    if 'start_time' not in session or 'word_to_draw' not in session:
+    if 'draw_start_time' not in session or 'draw_word' not in session:
         return jsonify(status="error", message="Session not started or corrupted"), 400
     
-    elapsed_time = time.time() - session['start_time']
+    elapsed_time = time.time() - session['draw_start_time']
     if elapsed_time > 33: # allowing 3s buffer for bad network delay
         return jsonify(status="error", message="Time expired"), 400
     
@@ -184,11 +184,11 @@ def submit_draw():
         f.write(data)
     
     # Get word_id
-    word_id = Word.query.filter_by(word=session['word_to_draw']).first().id   
+    word_id = Word.query.filter_by(word=session['draw_word']).first().id   
 
     # Create a database entry
     sketch = Sketch(sketch_path=filepath, user_id=current_user.id, word_id=word_id) # this could be wrong
     db.session.add(sketch)
     db.session.commit()
     
-    return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=session['word_to_draw']) # this could be wrong
+    return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=session['draw_word']) # this could be wrong
