@@ -8,6 +8,7 @@
     {% if current_user.is_authenticated %}
         <h1>Welcome back {{ current_user.first_name }} {{ current_user.last_name }}</h1>
     {% endif %}
+    <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
     <div class="card-grid">
         {% for sketch in sketches %}
             <div class="card">

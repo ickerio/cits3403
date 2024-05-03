@@ -59,13 +59,13 @@ $(document).ready(function() {
     
         // Clear the canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+        
         // Disable drawing after submission
         toggleDrawing(false);
-    
+        
         // Show the begin button again for a new game
         $('#beginButton').show();
-    
+        
         // Reset the timer display
         $('#timerPlaceholder').text("30");
     
@@ -75,6 +75,9 @@ $(document).ready(function() {
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({ image: dataURL }),
+            headers: {
+                'X-CSRFToken': $('#csrf_token').val()  // Include the CSRF token in the header
+            },
             success: function(response) {
                 console.log('Submission successful:', response);
                 // Optionally display a message to the user or handle the response further
@@ -84,7 +87,7 @@ $(document).ready(function() {
                 // Optionally handle the error, like displaying a message to the user
             }
         });
-    }
+    }    
 
     // Function to handle the start of a touch/draw
     function startPosition(e) {
