@@ -1,9 +1,12 @@
-from flask import render_template, jsonify, flash, redirect, url_for
+from flask import render_template, jsonify, flash, redirect, url_for, session, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db, login_manager, bcrypt
-from app.models import Word, User
+from app.models import Word, User, Sketch
 from app.forms import login_form, signup_form
 import random
+import time
+import base64
+import os
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -126,16 +129,66 @@ def guessForm(id):
 def draw():
     return render_template('draw.html')
 
-@app.route('/get-word')
+@app.route('/begin-draw', methods=["GET"])
 @login_required
-def get_word():
+def begin_draw():
     try:
         word_count = Word.query.count()
         if word_count:
             random_id = random.randint(1, word_count)
             word = Word.query.get(random_id)
             if word:
-                return jsonify(word=word.word)
-        return jsonify(word="No words available"), 404
+                # start drawing session
+                session['draw_start_time'] = time.time()
+                session['draw_word'] = word.word  # Store the word in the session
+                return jsonify(status="success", word=word.word)
+        return jsonify(status="error", message="No words available"), 404
     except Exception as e:
-        return jsonify(error=str(e)), 500
+        return jsonify(status="error", message=str(e)), 500
+    
+@app.route('/submit-draw', methods=["POST"])
+@login_required
+def submit_draw():
+    if 'draw_start_time' not in session or 'draw_word' not in session:
+        return jsonify(status="error", message="Session not started or corrupted"), 400
+    
+    elapsed_time = time.time() - session['draw_start_time']
+    if elapsed_time > 33: # allowing 3s buffer for bad network delay
+        return jsonify(status="error", message="Time expired"), 400
+    
+    # Decode and save the image
+    image_data = request.json.get('image')
+    if not image_data:
+        return jsonify(status="error", message="No image data provided"), 400
+    
+    # Strip header from data URL
+    header, encoded = image_data.split(',', 1)
+    data = base64.b64decode(encoded)
+    
+    directory = "app/static/sketches"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    
+    # Check if the canvas is blank
+    blankpath = os.path.join(directory, "blank.png")
+    with open(blankpath, "rb") as f:
+        blankdata = f.read()
+        if data == blankdata:
+            return jsonify(status="error", message="Blank canvas provided"), 400
+
+    filename = f"{current_user.id}_{int(time.time())}.png"
+    filepath = os.path.join(directory, filename)
+    
+    # Save the file
+    with open(filepath, "wb") as f:
+        f.write(data)
+    
+    # Get word_id
+    word_id = Word.query.filter_by(word=session['draw_word']).first().id   
+
+    # Create a database entry
+    sketch = Sketch(sketch_path=filepath, user_id=current_user.id, word_id=word_id) # this could be wrong
+    db.session.add(sketch)
+    db.session.commit()
+    
+    return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=session['draw_word']) # this could be wrong

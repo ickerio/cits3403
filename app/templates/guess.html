@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/guess.css') }}">
 {% endblock %}
 {% block content %}
+    <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
     <h1>Guess the Sketch!</h1>
     <div class="canvas-wrapper">
         <canvas id="drawnCanvas"></canvas>
