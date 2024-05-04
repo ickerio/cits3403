@@ -1,4 +1,4 @@
-from flask import render_template, jsonify, flash, redirect, url_for, session, request
+from flask import render_template, jsonify, flash, redirect, url_for, session, request, abort
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db, login_manager, bcrypt
 from app.models import Word, User, Sketch
@@ -112,11 +112,18 @@ def signup():
 
 
 # TODO: redo with Flask-Forms, as per above 
+
+
 @app.route('/guess/<int:id>', methods=["GET"])
 @login_required
 def guess(id):
-    return render_template('guess.html')
-
+    # Fetch the sketch from the database based on the provided id
+    sketch = Sketch.query.get(id)   
+    # If the sketch does not exist, return a 404 error
+    if not sketch:
+        abort(404)
+    # Pass the sketch data to the template
+    return render_template('guess.html', sketch=sketch)
 @app.route("/guess/<int:id>", methods=["POST"])
 @login_required
 def guessForm(id):
