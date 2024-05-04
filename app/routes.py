@@ -1,13 +1,15 @@
 from flask import render_template, jsonify, request, session
 from app import app, db
-from app.models import Word, User, GuessSession, Sketch
+from app.models import Word, User, GuessSession
 from datetime import datetime, timedelta
 import random
 
-# Define the time limit for guessing (30 seconds)
+# Time limit for guessing in seconds
 TIME_LIMIT = 30
 
-# Helper function to get user information (replace with actual user retrieval logic)
+# Note: Should use get url function in render_template()
+# -> Best not to hardcode the file name
+
 def get_user():
     return {
         'username': 'johndoe',
@@ -74,18 +76,8 @@ def signup():
 
 @app.route('/guess/<int:id>', methods=["GET"])
 def guess(id):
+    session['start_time'] = datetime.now()
     return render_template('guess.html', **get_user())
-
-@app.route('/submit_guess', methods=['POST'])
-def submit_guess():
-    user_guess = request.form.get('userguess')
-    guess_attempts = int(request.form.get('guessAttempts'))
-
-    # Perform any calculations or actions needed based on the guess data
-    # For example, you can calculate points, check the guess against the correct answer, etc.
-
-    # Return a response indicating the success or failure of the guess submission
-    return jsonify({'message': 'Guess submitted successfully!', 'guess': user_guess, 'attempts': guess_attempts})
 
 @app.route("/guess/<int:id>", methods=["POST"])
 def guessForm(id):
