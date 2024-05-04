@@ -37,12 +37,28 @@ function updateAttemptsDisplay() {
     attemptsDisplay.textContent = `Guess Attempts: ${guessAttempts}`;
 }
 
-// Handle guess submission, incrementing guess attempts
+// Handle guess submission, incrementing guess attempts and sending data to backend
 function handleGuessSubmission(event) {
     event.preventDefault(); // Prevent form default submission
     guessAttempts++; // Increment guess attempts
     updateAttemptsDisplay(); // Update attempts display
+
+    // Send data to backend (routes.py) using Fetch API or XMLHttpRequest
+    const formData = new FormData();
+    formData.append('userguess', guessInput.value);
+    formData.append('guessAttempts', guessAttempts);
+
+    fetch('/submit_guess', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        // Handle response from the server if needed
+        console.log('Guess submission response:', response);
+    })
+    .catch(error => {
+        // Handle any errors that occur during the fetch request
+        console.error('Error submitting guess:', error);
+    });
 }
 
-startGuessBtn.addEventListener('click', startGame);
-submitGuessBtn.addEventListener('click', handleGuessSubmission);
