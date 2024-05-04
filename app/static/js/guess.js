@@ -18,6 +18,12 @@ function startGame() {
     stopwatchInterval = setInterval(() => {
         elapsedTime++; // Increase every second
         updateStopwatchDisplay(); // Update the displayed time
+        // Check if time's up
+        if (elapsedTime >= 30) {
+            clearInterval(stopwatchInterval);
+            submitGuessBtn.disabled = true; // Disable submit button after time's up
+            guessInput.disabled = true; // Disable guess input field after time's up
+        }
     }, 1000);
     submitGuessBtn.removeAttribute('disabled'); // Enable the submit button
     guessInput.disabled = false; // Enable the guess input field
@@ -55,6 +61,11 @@ function handleGuessSubmission(event) {
     .then(response => {
         // Handle response from the server if needed
         console.log('Guess submission response:', response);
+        // Check if guess is correct
+        if (response.feedback_message === "Correct! Good job!") {
+            submitGuessBtn.disabled = true; // Disable submit button after correct guess
+            guessInput.disabled = true; // Disable guess input field after correct guess
+        }
     })
     .catch(error => {
         // Handle any errors that occur during the fetch request
@@ -62,3 +73,5 @@ function handleGuessSubmission(event) {
     });
 }
 
+startGuessBtn.addEventListener('click', startGame);
+submitGuessBtn.addEventListener('click', handleGuessSubmission);
