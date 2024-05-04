@@ -8,7 +8,7 @@
     <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
     <h1>Guess the Sketch!</h1>
     <div class="canvas-wrapper">
-        <canvas id="drawnCanvas"></canvas>
+        <img src="{{ sketch.sketch_path }}" alt="Sketch Image"> <!-- Display the sketch image -->
         <button id="startGuessBtn" class="start-guess-btn">Start Guessing</button>
     </div>
     <div id="stopwatchDisplay" class="mt-3">Are You Ready? 00:00:00</div>
@@ -16,7 +16,7 @@
     <div id="feedbackMessage" class="hidden mt-3"></div> <!-- Feedback message for incorrect guesses -->
     <div id="successMessage" class="hidden mt-3">You Got It!</div>
     <div class="input mt-3">
-        <form action="/guess" method="POST">
+        <form action="/guess/{{ sketch.id }}" method="POST">
             <input type="text" id="userguess" name="userguess" class="form-control" placeholder="Guess The Sketch" disabled>
             <div class="input-group-append mt-2">
                 <button class="btn-primary" id="submitguessBtn" type="submit" disabled>Submit</button>
