@@ -46,9 +46,13 @@ function handleGuessSubmission(event) {
             const successMessage = getRandomSuccessMessage();
             // Display success message
             feedbackMessage.textContent = `${successMessage} You earned ${data.points} points!`;
-        } else {
+        } 
+        else if (data.feedback_message === "Time's up! Please try again.") {
+            feedbackMessage.textContent = "Time's up! Sorry";
+        }
+        else {
             // Display incorrect guess message
-            feedbackMessage.textContent= "Incorrect guess! Keep trying.";
+            feedbackMessage.textContent= "Incorrect guess";
         }
         feedbackMessage.classList.remove('hidden'); // Show the feedback message
     })
