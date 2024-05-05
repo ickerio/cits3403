@@ -7,6 +7,7 @@ import random
 import time
 import base64
 import os
+from datetime import datetime
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -14,32 +15,23 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    sketches = [
-        {
-            'id': 1,
-            'username': 'someranomduser',
-            'date': '4m ago', # obviously this is a placeholder for better date parsing
-            'has_guessed': False,
-        },
-        {
-            'id': 2,
-            'username': 'otheruser',
-            'date': '7h ago', # obviously this is a placeholder for better date parsing
-            'has_guessed': False,
-        },
-        {
-            'id': 3,
-            'username': 'anotheruser',
-            'date': 'Apr 4', # obviously this is a placeholder for better date parsing
-            'has_guessed': True,
-        },
-        {
-            'id': 4,
-            'username': 'yetanotheruser',
-            'date': 'Dec 12, 2023', # obviously this is a placeholder for better date parsing
-            'has_guessed': True,
-        }
-    ]
+    sketches = []
+
+    # Fetch sketches from the database
+    all_sketches = Sketch.query.all()
+
+    for sketch in all_sketches:
+        guessed_session = GuessSession.query.filter_by(user_id=current_user.id, sketch_id=sketch.id).first()
+
+        if guessed_session:
+            time_taken = guessed_session.end_time - guessed_session.start_time
+            time_taken_str = f"{time_taken.seconds} seconds"
+            sketches.append({'id': sketch.id, 'username': sketch.author.username, 'date': time_taken_str})
+        else:
+            sketches.append({'id': sketch.id, 'username': sketch.author.username, 'date': None})
+
+    # Sort sketches so unguessed ones appear first
+    sketches.sort(key=lambda x: x['date'] is None, reverse=True)
 
     return render_template('index.html', sketches=sketches)
 
@@ -117,19 +109,50 @@ def signup():
 @app.route('/guess/<int:id>', methods=["GET"])
 @login_required
 def guess(id):
-    # Fetch the sketch from the database based on the provided id
     sketch = Sketch.query.get(id)   
-    # If the sketch does not exist, return a 404 error
+    # if the sketch doesn't exist, return 404 error
     if not sketch:
         abort(404)
     # Pass the sketch data to the template
     return render_template('guess.html', sketch=sketch)
+
+
+
+TIME_LIMIT = 30
+
 @app.route("/guess/<int:id>", methods=["POST"])
-@login_required
 def guessForm(id):
-    userid  = request.form.get("userguess") # todo: check the user guess
-    print(userid)
-    return render_template('guess.html')
+    user_guess = request.form.get("userguess")
+    sketch = Sketch.query.get(id)
+    user = User.query.get(session.get('user_id'))
+
+    feedback_message = ""
+    submit_disabled = False
+
+    # Check if the time limit for guessing has expired
+    if 'start_time' not in session:
+        session['start_time'] = datetime.now()
+
+    elapsed_time = datetime.now() - session['start_time']
+    remaining_seconds = TIME_LIMIT - elapsed_time.total_seconds()
+
+    if remaining_seconds <= 0:
+        feedback_message = "Time's up! Please try again."
+        submit_disabled = True
+    else:
+        # Check if the user's guess matches the word associated with the sketch
+        if user_guess.lower() == sketch.word.word.lower():
+            feedback_message = "Correct! Good job!"
+            submit_disabled = True
+            # Calculate points based on the formula: (seconds remaining / guess attempts) x 100
+            points = int((remaining_seconds) * 100)
+            user.points += points
+            db.session.commit()
+        else:
+            feedback_message = "Incorrect guess! Keep trying."
+
+    return jsonify(feedback_message=feedback_message, submit_disabled=submit_disabled)
+
 
 @app.route('/draw')
 @login_required
@@ -199,3 +222,4 @@ def submit_draw():
     db.session.commit()
     
     return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=session['draw_word']) # this could be wrong
+
