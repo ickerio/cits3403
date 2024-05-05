@@ -1,67 +1,60 @@
-const stopwatchDisplay = document.getElementById('stopwatchDisplay');
 const startGuessBtn = document.getElementById('startGuessBtn');
 const submitGuessBtn = document.getElementById('submitguessBtn');
-const guessInput = document.getElementById('userguess'); // Get the guess input field
-const successMessage = document.getElementById('successMessage');
-const feedbackMessage = document.getElementById('feedbackMessage'); // Get the feedback message element
+const guessInput = document.getElementById('userguess');
 const drawnCanvas = document.getElementById('drawnCanvas');
-const attemptsDisplay = document.getElementById('attemptsDisplay'); // Element to display attempts
-let stopwatchInterval;
-let elapsedTime = 0; // Time in seconds
-let guessAttempts = 0; // Initialize guess attempts counter
+const attemptsDisplay = document.getElementById('attemptsDisplay');
+const feedbackMessage = document.getElementById('feedbackMessage'); // Define feedbackMessage variable
 
-// Function to start the game and stopwatch
 function startGame() {
-    clearInterval(stopwatchInterval); // Clear any existing intervals
-    elapsedTime = 0; // Reset stopwatch
-    guessAttempts = 0; // Reset guess attempts
-    updateStopwatchDisplay(); // Immediately update the display
-    updateAttemptsDisplay(); // Update attempts display
-    stopwatchInterval = setInterval(() => {
-        elapsedTime++; // Increase every second
-        updateStopwatchDisplay(); // Update the displayed time
-    }, 1000);
-    submitGuessBtn.removeAttribute('disabled'); // Enable the submit button
-    guessInput.disabled = false; // Enable the guess input field
-    drawnCanvas.style.filter = "none"; // Remove blur from the canvas
-    feedbackMessage.classList.add('hidden'); // Hide feedback message at game start
+    submitGuessBtn.removeAttribute('disabled'); 
+    guessInput.disabled = false; 
+    drawnCanvas.style.filter = "none"; 
 }
 
-// Function to update the stopwatch display
-function updateStopwatchDisplay() {
-    const hours = Math.floor(elapsedTime / 3600);
-    const minutes = Math.floor((elapsedTime % 3600) / 60);
-    const seconds = elapsedTime % 60;
-    stopwatchDisplay.textContent = `Tik! Tok! Time is Ticking! ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+// Function to generate a random success message
+function getRandomSuccessMessage() {
+    const successMessages = [
+        "Congratulations! You got it right!",
+        "Amazing job! That's correct!",
+        "You nailed it! Well done!",
+        "Fantastic! Your guess is correct!",
+        "Bravo! You guessed it right!",
+        "Hooray! That's the correct guess!",
+        "Excellent! You got it spot on!",
+        "Impressive! You guessed correctly!"
+    ];
+    const randomIndex = Math.floor(Math.random() * successMessages.length);
+    return successMessages[randomIndex];
 }
 
-// Function to update guess attempts display
-function updateAttemptsDisplay() {
-    attemptsDisplay.textContent = `Guess Attempts: ${guessAttempts}`;
-}
-
-// Handle guess submission, incrementing guess attempts
 function handleGuessSubmission(event) {
-    event.preventDefault(); // Prevent form default submission
-    guessAttempts++; // Increment guess attempts
-    updateAttemptsDisplay(); // Update attempts display
+    event.preventDefault(); 
 
-    // Placeholder for checking the correctness of the guess
-    const isCorrect = false; // This should be replaced with actual correctness checking logic
+    const formData = new FormData();
+    formData.append('userguess', guessInput.value);
 
-    if (isCorrect) {
-        clearInterval(stopwatchInterval); // Stop the stopwatch
-        submitGuessBtn.setAttribute('disabled', true); // Disable the submit button
-        guessInput.disabled = true; // Disable further guesses
-        successMessage.classList.remove('hidden'); // Show success message
-        feedbackMessage.classList.add('hidden'); // Ensure feedback message is hidden
-    } else {
-        feedbackMessage.textContent = 'Try again!'; // Update and show feedback message
-        feedbackMessage.classList.remove('hidden');
-    }
-
-    // Clear the input after each guess
-    guessInput.value = '';
+    fetch(`/guess/${sketchId}`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        submitGuessBtn.disabled = data.submit_disabled; 
+        guessInput.disabled = data.submit_disabled;
+        if (data.feedback_message === "Correct! Good job!") {
+            // Display random success message
+            const successMessage = getRandomSuccessMessage();
+            // Display success message
+            feedbackMessage.textContent = `${successMessage} You earned ${data.points} points!`;
+        } else {
+            // Display incorrect guess message
+            feedbackMessage.textContent= "Incorrect guess! Keep trying.";
+        }
+        feedbackMessage.classList.remove('hidden'); // Show the feedback message
+    })
+    .catch(error => {
+        console.error('Error submitting guess:', error);
+    });
 }
 
 startGuessBtn.addEventListener('click', startGame);
