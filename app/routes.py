@@ -151,7 +151,7 @@ def guessForm(id):
         else:
             feedback_message = "Incorrect guess! Keep trying."
 
-    return jsonify(feedback_message=feedback_message, submit_disabled=submit_disabled)
+    return jsonify(feedback_message=feedback_message, submit_disabled=submit_disabled, points=points)
 
 
 @app.route('/draw')
