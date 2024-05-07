@@ -1,80 +1,58 @@
-{% extends "layout.html" %}
-{% block title %}Login{% endblock %}
-{% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
-{% endblock %}
-{% block content %}
-    <div class="container">
-        <div class="auth-container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+{% extends "layout.html" %} {% block title %}{{ "Sign Up" if request.path ==
+'/signup' else "Log In" }}{% endblock %} {% block head %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/auth.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="container">
+  <div class="auth-container">
+    <h2>{{ "Sign Up" if request.path == '/signup' else "Log In" }}</h2>
+    <!-- Dynamic Heading -->
 
-            <form action="{{ request.path }}" method="post">
-
-                {{ form.csrf_token }}
-
-                {% if request.path == '/signup' %}
-                    {{ form.username(class_="form-control",placeholder="Username")}}
-                    {% for error in form.username.errors %}
-                        {{ error }}
-                    {% endfor %}
-                {% endif %}
-
-                {{ form.email(class_="form-control",placeholder="Email")}}
-                {% for error in form.email.errors %}
-                    {{ error }}
-                {% endfor %}
-
-                {% if request.path == '/signup' %}
-                    {{ form.first_name(class_="form-control",placeholder="First Name")}}
-                    {% for error in form.first_name.errors %}
-                        {{ error }}
-                    {% endfor %}
-
-                    {{ form.last_name(class_="form-control",placeholder="Last Name")}}
-                    {% for error in form.last_name.errors %}
-                        {{ error }}
-                    {% endfor %}
-                {% endif %}
-
-                {{ form.pwd(class_="form-control",placeholder="Password")}}
-                {% for error in form.pwd.errors %}
-                    {{ error }}
-                {% endfor %}
-
-                {% if request.path == '/signup' %}
-                    {{ form.cpwd(class_="form-control",placeholder="Confirm Password")}}
-                    {% for error in form.cpwd.errors %}
-                        {{ error }}
-                    {% endfor %}
-                {% endif %}
-
-                <button type="submit" class="btn btn-block btn-primary mb-3">
-                    {{ btn_action }}
-                </button>
-
-                <p>
-                    {% if request.path != '/signup' %}
-                        New here?
-                        <a href="{{url_for('signup')}}">Create account</a>
-                    {% else %}
-                        Already have an account?
-                        <a href="{{url_for('login')}}">Login</a>
-                    {% endif %}
-                </p>
-            </form>
-        </div>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <div
+      class="alert alert-{{category}} alert-dismissible fade show"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
     </div>
-{% endblock %}
-{% block scripts %}
-    {{ super() }}
-{% endblock %}
+    {% endfor %} {% endif %} {% endwith %}
+
+    <form action="{{ request.path }}" method="post">
+      {{ form.csrf_token }} {% if request.path == '/signup' %} {{
+      form.username(class_="form-control", placeholder="Username")}} {% for
+      error in form.username.errors %} {{ error }} {% endfor %} {% endif %} {{
+      form.email(class_="form-control", placeholder="Email")}} {% for error in
+      form.email.errors %} {{ error }} {% endfor %} {% if request.path ==
+      '/signup' %} {{ form.first_name(class_="form-control", placeholder="First
+      Name")}} {% for error in form.first_name.errors %} {{ error }} {% endfor
+      %} {{ form.last_name(class_="form-control", placeholder="Last Name")}} {%
+      for error in form.last_name.errors %} {{ error }} {% endfor %} {% endif %}
+      {{ form.pwd(class_="form-control", placeholder="Password")}} {% for error
+      in form.pwd.errors %} {{ error }} {% endfor %} {% if request.path ==
+      '/signup' %} {{ form.cpwd(class_="form-control", placeholder="Confirm
+      Password")}} {% for error in form.cpwd.errors %} {{ error }} {% endfor %}
+      {% endif %}
+
+      <button type="submit" class="btn btn-block btn-primary mb-3">
+        {{ "Sign Up" if request.path == '/signup' else "Log In" }}
+      </button>
+
+      <p>
+        {% if request.path != '/signup' %} New here?
+        <a href="{{ url_for('signup') }}">Create account</a> {% else %} Already
+        have an account? <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+      </p>
+    </form>
+  </div>
+</div>
+{% endblock %} {% block scripts %} {{ super() }} {% endblock %}
