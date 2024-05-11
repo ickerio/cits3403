@@ -1,13 +1,25 @@
 from flask import render_template, jsonify, flash, redirect, url_for, session, request, abort
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db, login_manager, bcrypt
-from app.models import Word, User, Sketch
+from app.models import Word, User, Sketch, GuessSession
 from app.forms import login_form, signup_form
 import random
 import time
 import base64
 import os
 from datetime import datetime
+
+#Potential Issues
+# did not include the has_guessed boolean in index() sketches[], might be ok?
+# the timing of 30s for /guess probs wont work if someone has bad load times
+# should use more specific session variable names for /guess timings
+
+#Error
+"""
+guessed_session = GuessSession.query.filter_by(user_id=current_user.id, sketch_id=sketch.id).first()
+AttributeError: 'AnonymousUserMixin' object has no attribute 'id'
+
+"""
 
 @login_manager.user_loader
 def load_user(user_id):
