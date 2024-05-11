@@ -33,7 +33,10 @@ def index():
     all_sketches = Sketch.query.all()
 
     for sketch in all_sketches:
-        guessed_session = GuessSession.query.filter_by(user_id=current_user.id, sketch_id=sketch.id).first()
+        if current_user.is_authenticated:
+            guessed_session = GuessSession.query.filter_by(user_id=current_user.id, sketch_id=sketch.id).first()
+        else:
+            guessed_session = None
 
         if guessed_session:
             time_taken = guessed_session.end_time - guessed_session.start_time
