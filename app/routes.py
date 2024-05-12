@@ -43,7 +43,9 @@ def index():
             time_taken_str = f"{time_taken.seconds} seconds"
             sketches.append({'id': sketch.id, 'username': sketch.author.username, 'date': time_taken_str})
         else:
-            sketches.append({'id': sketch.id, 'username': sketch.author.username, 'date': None})
+            # Get the creation date of the sketch
+            created_date = sketch.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            sketches.append({'id': sketch.id, 'username': sketch.author.username, 'date': created_date})
 
     # Sort sketches so unguessed ones appear first
     sketches.sort(key=lambda x: x['date'] is None, reverse=True)
@@ -133,9 +135,12 @@ def guess(id):
 
 
 
-TIME_LIMIT = 30
+#Initialize guess attempts counter
+if 'guess_attempts' not in session:
+    session['guess_attempts'] = 0
 
-@app.route("/guess/<int:id>", methods=["POST"])
+@app.route('/guess/<int:id>', methods=["POST"])
+@login_required
 def guessForm(id):
     user_guess = request.form.get("userguess")
     sketch = Sketch.query.get(id)
@@ -144,12 +149,15 @@ def guessForm(id):
     feedback_message = ""
     submit_disabled = False
 
-    # Check if the time limit for guessing has expired
-    if 'start_time' not in session:
-        session['start_time'] = datetime.now()
+    # Increment guess attempts
+    session['guess_attempts'] += 1
 
-    elapsed_time = datetime.now() - session['start_time']
-    remaining_seconds = TIME_LIMIT - elapsed_time.total_seconds()
+    # Check if the time limit for guessing has expired
+    if 'guess_start_time' not in session:
+        session['guess_start_time'] = datetime.now()
+
+    elapsed_time = datetime.now() - session['guess_start_time']
+    remaining_seconds = 33 - elapsed_time.total_seconds()
 
     if remaining_seconds <= 0:
         feedback_message = "Time's up! Please try again."
@@ -160,11 +168,16 @@ def guessForm(id):
             feedback_message = "Correct! Good job!"
             submit_disabled = True
             # Calculate points based on the formula: (seconds remaining / guess attempts) x 100
-            points = int((remaining_seconds) * 100)
+            points = int((remaining_seconds / session['guess_attempts']) * 100)
             user.points += points
             db.session.commit()
         else:
             feedback_message = "Incorrect guess! Keep trying."
+
+        # Create GuessSession entry
+        guess_session = GuessSession(user_id=user.id, sketch_id=sketch.id, start_time=session['guess_start_time'], end_time=datetime.now())
+        db.session.add(guess_session)
+        db.session.commit()
 
     return jsonify(feedback_message=feedback_message, submit_disabled=submit_disabled, points=points)
 
@@ -232,7 +245,7 @@ def submit_draw():
     word_id = Word.query.filter_by(word=session['draw_word']).first().id   
 
     # Create a database entry
-    sketch = Sketch(sketch_path=filepath, user_id=current_user.id, word_id=word_id) # this could be wrong
+    sketch = Sketch(sketch_path=filepath, user_id=current_user.id, word_id=word_id, created_at=datetime.now()) # this could be wrong
     db.session.add(sketch)
     db.session.commit()
     
