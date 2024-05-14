@@ -141,23 +141,58 @@ def begin_guess():
     sketch_id = session.get('sketch_id')
     if not sketch_id:
         return jsonify({'error': 'Sketch not set'}), 403
+    
     sketch = Sketch.query.get_or_404(sketch_id)
+    word_to_guess = sketch.word.word  # Accessing the word associated with the sketch
+    session['word_to_guess'] = word_to_guess  # Saving the word in the session
+
+    session['num_guesses'] = 0
+
+    #also a GuessSession should be created here?
+
     image_path = "app/" + sketch.sketch_path
     try:
         with open(image_path, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
         session['guess_start_time'] = time.time()
-        # Add other key data we need to track here
-        return jsonify({'image_data': 'data:image/png;base64,' + encoded_string})
+        return jsonify({'image_data': 'data:image/png;base64,' + encoded_string, 'word_to_guess': word_to_guess})
     except IOError:
         return jsonify({'error': 'File not found'}), 404
 
-@app.route("/guess/<int:id>", methods=["POST"])
+@app.route("/submit-guess", methods=["POST"])
 @login_required
-def guessForm(id):
-    userid = request.form.get("userguess") # todo: check the user guess
-    print(userid)
-    return render_template('guess.html')
+def submit_guess():
+    if 'guess_start_time' not in session or 'word_to_guess' not in session:
+        return jsonify(status="error", message="Session not started or corrupted"), 400
+    
+    elapsed_time = time.time() - session['guess_start_time']
+    if elapsed_time > 33: # allowing 3s buffer for bad network delay
+        return jsonify(status="error", message="Time expired"), 400
+    
+    session['num_guesses'] = session.get('num_guesses', 0) + 1
+
+    guess = request.form.get('userguess')
+    if not guess:
+        return jsonify({'correct': False, 'message': 'Guess cannot be empty'}), 400
+
+    # Check if the guess is correct
+    guess_correct = guess.lower() == session['word_to_guess'].lower() if session['word_to_guess'] else False
+
+    # Record the guess in the database
+    guess_session = GuessSession(
+        user_id=current_user.id,
+        sketch_id=session.get('sketch_id') if session.get('sketch_id') else None,
+        guess_correctly=guess_correct
+    )
+    db.session.add(guess_session)
+    db.session.commit()
+
+    current_user.guessed += 1 # this could be wrong
+    if guess_correct:
+        current_user.points += 10 # to calc
+    db.session.commit()
+
+    return jsonify({'correct': guess_correct, 'message': 'Guess received'})
 
 @app.route('/draw')
 @login_required

@@ -69,7 +69,7 @@ $(document).ready(function() {
         $('#attemptsDisplay').text(`Guess Attempts: ${guessCount}`);
 
         $.ajax({
-            url: '/guess',
+            url: '/submit-guess',
             type: 'POST',
             data: {
                 userguess: userGuess,
