@@ -9,15 +9,18 @@ import base64
 import os
 from datetime import datetime
 
-#Potential Issues
-# did not include the has_guessed boolean in index() sketches[], might be ok?
-# the timing of 30s for /guess probs wont work if someone has bad load times
-# should use more specific session variable names for /guess timings
-
-#Error
 """
-guessed_session = GuessSession.query.filter_by(user_id=current_user.id, sketch_id=sketch.id).first()
-AttributeError: 'AnonymousUserMixin' object has no attribute 'id'
+
+Actual issues:
+- sketch still not displayed to user correctly
+- seems like a user can guess their own sketch
+
+Possible Issues:
+- no need to add created_at to the Sketch commit, it does it automatically
+    this might mess it's retrieval in index() after fixing this, ok for now
+- check GuessSession commit, need to make sure the Sketch/User it's based on is correct
+- the counting of the guesses probably will mess up
+    if the user moves to a new /guess, the counter isn't reset?
 
 """
 
@@ -135,9 +138,7 @@ def guess(id):
 
 
 
-#Initialize guess attempts counter
-if 'guess_attempts' not in session:
-    session['guess_attempts'] = 0
+
 
 @app.route('/guess/<int:id>', methods=["POST"])
 @login_required
@@ -149,6 +150,10 @@ def guessForm(id):
     feedback_message = ""
     submit_disabled = False
 
+
+    #Initialize guess attempts counter
+    if 'guess_attempts' not in session:
+        session['guess_attempts'] = 0
     # Increment guess attempts
     session['guess_attempts'] += 1
 
