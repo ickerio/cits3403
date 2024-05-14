@@ -120,12 +120,22 @@ def signup():
 
     return render_template('auth.html', form=form)
 
-
-# TODO: redo with Flask-Forms, as per above 
 @app.route('/guess/<int:id>', methods=["GET"])
 @login_required
 def guess(id):
     return render_template('guess.html')
+
+@app.route("/begin-guess/<int:id>", methods=["GET"])
+@login_required
+def begin_guess(id):
+    sketch = Sketch.query.get_or_404(id)
+    image_path = os.path.join(app.static_folder, 'sketches', os.path.basename(sketch.sketch_path))
+    try:
+        with open(image_path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+        return jsonify({'image_data': 'data:image/png;base64,' + encoded_string})
+    except IOError:
+        return jsonify({'error': 'File not found'}), 404
 
 @app.route("/guess/<int:id>", methods=["POST"])
 @login_required
