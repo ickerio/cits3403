@@ -187,9 +187,10 @@ def submit_guess():
     db.session.add(guess_session)
     db.session.commit()
 
-    current_user.guessed += 1 # this could be wrong
+    current_user.guessed += 1 
+    remaining_seconds = 33 - elapsed_time
     if guess_correct:
-        current_user.points += 10 # to calc
+        current_user.points += int((remaining_seconds / session['num_guesses']) * 100)
     db.session.commit()
 
     return jsonify({'correct': guess_correct, 'message': 'Guess received'})
