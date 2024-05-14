@@ -15,8 +15,14 @@
                 <img src="https://picsum.photos/seed/{{ sketch.id }}/300/300" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">@{{ sketch.username }}</h5>
-                    {% if sketch.has_guessed %}
-                        <p class="card-text">You guessed in 25s</p>
+                    {% if sketch.cannot_guess %}
+                        {% if sketch.guessed_correctly %}
+                            <p class="card-text">You guessed correctly at {{ sketch.guessed_at }}!</p>
+                        {% elif not sketch.guessed_correctly and sketch.guessed_at %}
+                            <p class="card-text">You guessed this sketch incorrectly!</p>
+                        {% else %}
+                            <p class="card-text">You have drawn this sketch.</p>
+                        {% endif %}
                     {% else %}
                         <a href="/guess/{{ sketch.id }}" class="btn btn-primary" role="button">Guess</a>
                     {% endif %}

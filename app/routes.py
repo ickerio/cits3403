@@ -1,7 +1,8 @@
+from datetime import datetime
 from flask import render_template, jsonify, flash, redirect, url_for, session, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db, login_manager, bcrypt
-from app.models import Word, User, Sketch
+from app.models import Word, User, Sketch, GuessSession
 from app.forms import login_form, signup_form
 import random
 import time
@@ -14,34 +15,43 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    sketches = [
-        {
-            'id': 1,
-            'username': 'someranomduser',
-            'date': '4m ago', # obviously this is a placeholder for better date parsing
-            'has_guessed': False,
-        },
-        {
-            'id': 2,
-            'username': 'otheruser',
-            'date': '7h ago', # obviously this is a placeholder for better date parsing
-            'has_guessed': False,
-        },
-        {
-            'id': 3,
-            'username': 'anotheruser',
-            'date': 'Apr 4', # obviously this is a placeholder for better date parsing
-            'has_guessed': True,
-        },
-        {
-            'id': 4,
-            'username': 'yetanotheruser',
-            'date': 'Dec 12, 2023', # obviously this is a placeholder for better date parsing
-            'has_guessed': True,
-        }
-    ]
+    sketches_data = []
 
-    return render_template('index.html', sketches=sketches)
+    # Fetch all sketches from the database
+    sketches = Sketch.query.all()
+
+    for sketch in sketches:
+        # Determine if the current user has guessed and if they are the author
+        guess_session = GuessSession.query.filter_by(
+            user_id=current_user.id,
+            sketch_id=sketch.id
+        ).first()
+
+        cannot_guess = guess_session is not None or sketch.user_id == current_user.id
+        guessed_correctly = guess_session.guess_correctly if guess_session else None
+
+        # Check and format the guessed_at date if exists
+        if guess_session and guess_session.guess_at:
+            date_format = "%b %d, %Y" if guess_session.guess_at.year == datetime.now().year else "%b %d, %Y"
+            guessed_at = guess_session.guess_at.strftime(date_format)
+        else:
+            guessed_at = None
+
+        # Format the date properly
+        date_format = "%b %d, %Y" if sketch.created_at.year == datetime.now().year else "%b %d, %Y"
+        formatted_date = sketch.created_at.strftime(date_format)
+
+        sketches_data.append({
+            'id': sketch.id,
+            'username': sketch.author.username,
+            'date': formatted_date,
+            'cannot_guess': cannot_guess,
+            'guessed_correctly': guessed_correctly,
+            'guessed_at': guessed_at
+        })
+
+    return render_template('index.html', sketches=sketches_data)
+
 
 @app.route('/leaderboard')
 @login_required
