@@ -1,68 +1,92 @@
-const stopwatchDisplay = document.getElementById('stopwatchDisplay');
-const startGuessBtn = document.getElementById('startGuessBtn');
-const submitGuessBtn = document.getElementById('submitguessBtn');
-const guessInput = document.getElementById('userguess'); // Get the guess input field
-const successMessage = document.getElementById('successMessage');
-const feedbackMessage = document.getElementById('feedbackMessage'); // Get the feedback message element
-const drawnCanvas = document.getElementById('drawnCanvas');
-const attemptsDisplay = document.getElementById('attemptsDisplay'); // Element to display attempts
-let stopwatchInterval;
-let elapsedTime = 0; // Time in seconds
-let guessAttempts = 0; // Initialize guess attempts counter
+$(document).ready(function() {
+    let interval;
+    let secondsRemaining = 30; // Countdown time in seconds
+    let sketchId = $('#startGuessBtn').data('sketch-id'); // Assuming the sketch ID is stored in a data attribute
 
-// Function to start the game and stopwatch
-function startGame() {
-    clearInterval(stopwatchInterval); // Clear any existing intervals
-    elapsedTime = 0; // Reset stopwatch
-    guessAttempts = 0; // Reset guess attempts
-    updateStopwatchDisplay(); // Immediately update the display
-    updateAttemptsDisplay(); // Update attempts display
-    stopwatchInterval = setInterval(() => {
-        elapsedTime++; // Increase every second
-        updateStopwatchDisplay(); // Update the displayed time
-    }, 1000);
-    submitGuessBtn.removeAttribute('disabled'); // Enable the submit button
-    guessInput.disabled = false; // Enable the guess input field
-    drawnCanvas.style.filter = "none"; // Remove blur from the canvas
-    feedbackMessage.classList.add('hidden'); // Hide feedback message at game start
-}
+    function startTimer(duration) {
+        secondsRemaining = duration;
+        interval = setInterval(function() {
+            let minutes = parseInt(secondsRemaining / 60, 10);
+            let seconds = parseInt(secondsRemaining % 60, 10);
 
-// Function to update the stopwatch display
-function updateStopwatchDisplay() {
-    const hours = Math.floor(elapsedTime / 3600);
-    const minutes = Math.floor((elapsedTime % 3600) / 60);
-    const seconds = elapsedTime % 60;
-    stopwatchDisplay.textContent = `Tik! Tok! Time is Ticking! ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
 
-// Function to update guess attempts display
-function updateAttemptsDisplay() {
-    attemptsDisplay.textContent = `Guess Attempts: ${guessAttempts}`;
-}
+            $('#stopwatchDisplay').text(`Time Remaining: ${minutes}:${seconds}`);
 
-// Handle guess submission, incrementing guess attempts
-function handleGuessSubmission(event) {
-    event.preventDefault(); // Prevent form default submission
-    guessAttempts++; // Increment guess attempts
-    updateAttemptsDisplay(); // Update attempts display
-
-    // Placeholder for checking the correctness of the guess
-    const isCorrect = false; // This should be replaced with actual correctness checking logic
-
-    if (isCorrect) {
-        clearInterval(stopwatchInterval); // Stop the stopwatch
-        submitGuessBtn.setAttribute('disabled', true); // Disable the submit button
-        guessInput.disabled = true; // Disable further guesses
-        successMessage.classList.remove('hidden'); // Show success message
-        feedbackMessage.classList.add('hidden'); // Ensure feedback message is hidden
-    } else {
-        feedbackMessage.textContent = 'Try again!'; // Update and show feedback message
-        feedbackMessage.classList.remove('hidden');
+            if (--secondsRemaining < 0) {
+                clearInterval(interval);
+                disableGuessing();
+                $('#feedbackMessage').text('Time is up!').addClass('text-danger').removeClass('hidden');
+            }
+        }, 1000);
     }
 
-    // Clear the input after each guess
-    guessInput.value = '';
-}
+    function disableGuessing() {
+        $('#userguess').prop('disabled', true);
+        $('#submitguessBtn').prop('disabled', true);
+    }
 
-startGuessBtn.addEventListener('click', startGame);
-submitGuessBtn.addEventListener('click', handleGuessSubmission);
+    function enableGuessing() {
+        $('#userguess').prop('disabled', false);
+        $('#submitguessBtn').prop('disabled', false);
+    }
+
+    function drawImageOnCanvas(dataUrl) {
+        const canvas = document.getElementById('drawnCanvas');
+        const context = canvas.getContext('2d');
+        const image = new Image();
+        image.onload = function() {
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        };
+        image.src = dataUrl;
+    }
+
+    $('#startGuessBtn').click(function() {
+        $(this).hide();
+        $.ajax({
+            url: `/begin-guess`,
+            type: 'GET',
+            success: function(response) {
+                if (response.image_data) {
+                    drawImageOnCanvas(response.image_data);
+                    startTimer(30);
+                    enableGuessing();
+                } else if (response.error) {
+                    $('#feedbackMessage').text(response.error).addClass('text-danger').removeClass('hidden');
+                }
+            },
+            error: function() {
+                $('#feedbackMessage').text('Error loading the sketch. Please try again.').addClass('text-danger').removeClass('hidden');
+            }
+        });
+    });
+
+    $('form').submit(function(event) {
+        event.preventDefault();
+        let userGuess = $('#userguess').val();
+        let guessCount = parseInt($('#attemptsDisplay').text().split(': ')[1]) + 1;
+        $('#attemptsDisplay').text(`Guess Attempts: ${guessCount}`);
+
+        $.ajax({
+            url: '/submit-guess',
+            type: 'POST',
+            data: {
+                userguess: userGuess,
+                csrf_token: $('#csrf_token').val()
+            },
+            success: function(response) {
+                if (response.correct) {
+                    $('#feedbackMessage').text('You Got It!').addClass('text-success').removeClass('hidden');
+                    clearInterval(interval);
+                    disableGuessing();
+                } else {
+                    $('#feedbackMessage').text('Incorrect, try again!').addClass('text-danger').removeClass('hidden');
+                }
+            },
+            error: function() {
+                $('#feedbackMessage').text('Error processing your guess. Please try again.').addClass('text-danger').removeClass('hidden');
+            }
+        });
+    });
+});
