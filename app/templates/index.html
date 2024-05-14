@@ -24,7 +24,7 @@
                             <p class="card-text">You have drawn this sketch.</p>
                         {% endif %}
                     {% else %}
-                        <a href="/guess/{{ sketch.id }}" class="btn btn-primary" role="button">Guess</a>
+                        <a href="{{ url_for('set_sketch_id', sketch_id=sketch.id) }}" class="btn btn-primary" role="button">Guess</a>
                     {% endif %}
                     <p class="card-text"><small class="text-muted">{{ sketch.date }}</small></p>
                 </div>

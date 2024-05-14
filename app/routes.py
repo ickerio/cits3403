@@ -120,19 +120,34 @@ def signup():
 
     return render_template('auth.html', form=form)
 
-@app.route('/guess/<int:id>', methods=["GET"])
+@app.route('/set-sketch-id/<int:sketch_id>')
 @login_required
-def guess(id):
+def set_sketch_id(sketch_id):
+    session['sketch_id'] = sketch_id
+    return redirect(url_for('guess'))
+
+@app.route('/guess', methods=["GET"])
+@login_required
+def guess():
+    sketch_id = session.get('sketch_id')
+    if sketch_id is None:
+        # Redirect the user to index or show an error
+        return redirect(url_for('index'))
     return render_template('guess.html')
 
-@app.route("/begin-guess/<int:id>", methods=["GET"])
+@app.route("/begin-guess", methods=["GET"])
 @login_required
-def begin_guess(id):
-    sketch = Sketch.query.get_or_404(id)
-    image_path = os.path.join(app.static_folder, 'sketches', os.path.basename(sketch.sketch_path))
+def begin_guess():
+    sketch_id = session.get('sketch_id')
+    if not sketch_id:
+        return jsonify({'error': 'Sketch not set'}), 403
+    sketch = Sketch.query.get_or_404(sketch_id)
+    image_path = "app/" + sketch.sketch_path
     try:
         with open(image_path, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+        session['guess_start_time'] = time.time()
+        # Add other key data we need to track here
         return jsonify({'image_data': 'data:image/png;base64,' + encoded_string})
     except IOError:
         return jsonify({'error': 'File not found'}), 404
@@ -140,7 +155,7 @@ def begin_guess(id):
 @app.route("/guess/<int:id>", methods=["POST"])
 @login_required
 def guessForm(id):
-    userid  = request.form.get("userguess") # todo: check the user guess
+    userid = request.form.get("userguess") # todo: check the user guess
     print(userid)
     return render_template('guess.html')
 
