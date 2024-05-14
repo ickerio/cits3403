@@ -166,28 +166,35 @@ def submit_guess():
         return jsonify(status="error", message="Session not started or corrupted"), 400
     
     elapsed_time = time.time() - session['guess_start_time']
-    if elapsed_time > 33: # allowing 3s buffer for bad network delay
+    if elapsed_time > 33:  # allowing 3s buffer for bad network delay
         return jsonify(status="error", message="Time expired"), 400
     
-    session['num_guesses'] = session.get('num_guesses', 0) + 1
-
     guess = request.form.get('userguess')
     if not guess:
         return jsonify({'correct': False, 'message': 'Guess cannot be empty'}), 400
 
-    # Check if the guess is correct
     guess_correct = guess.lower() == session['word_to_guess'].lower() if session['word_to_guess'] else False
+    sketch_id = session.get('sketch_id')
 
-    # Record the guess in the database
-    guess_session = GuessSession(
-        user_id=current_user.id,
-        sketch_id=session.get('sketch_id') if session.get('sketch_id') else None,
-        guess_correctly=guess_correct
-    )
+    # Check if there's an existing guess session for this user and sketch
+    guess_session = GuessSession.query.filter_by(user_id=current_user.id, sketch_id=sketch_id).first()
+    if not guess_session:
+        # Create a new GuessSession if none exists
+        guess_session = GuessSession(
+            user_id=current_user.id,
+            sketch_id=sketch_id,
+            guess_correctly=guess_correct
+        )
+    else:
+        # Update existing GuessSession
+        guess_session.guess_correctly = guess_correct
+        guess_session.guess_at = db.func.current_timestamp()
+
     db.session.add(guess_session)
     db.session.commit()
 
-    current_user.guessed += 1 
+    session['num_guesses'] = session.get('num_guesses', 0) + 1  # update guesses count
+    current_user.guessed += 1
     remaining_seconds = 33 - elapsed_time
     if guess_correct:
         current_user.points += int((remaining_seconds / session['num_guesses']) * 100)
