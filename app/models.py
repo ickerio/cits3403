@@ -32,8 +32,8 @@ class GuessSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     sketch_id = db.Column(db.Integer, db.ForeignKey('sketch.id'), nullable=False)
-    start_time = db.Column(db.DateTime, default=datetime.utcnow)
-    end_time = db.Column(db.DateTime, nullable=True)  # Initially null, set when the user makes a correct guess
+    guess_at = db.Column(db.DateTime, nullable=True)  # Timestamp for when the guess is made, can be null
+    guess_correctly = db.Column(db.Boolean, default=False, nullable=False)  # Whether the final guess was correct
 
     # Relation to User
     user = db.relationship('User', backref=db.backref('guess_sessions', lazy='dynamic'))
