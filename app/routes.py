@@ -150,7 +150,7 @@ def begin_guess():
 
     #also a GuessSession should be created here?
 
-    image_path = "app/" + sketch.sketch_path
+    image_path = sketch.sketch_path
     try:
         with open(image_path, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
