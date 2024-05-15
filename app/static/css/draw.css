@@ -16,9 +16,8 @@
     width: 100%;
     padding-top: 46.25%;
     background-color: #000;
-    border: 3px solid black; /* Adds a black border around the canvas wrapper */
+    border: 2px solid black; /* Adds a black border around the canvas wrapper */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
-    border-radius: 8px; /* Rounds the corners of the canvas wrapper */
 }
 
 #drawingCanvas {
