@@ -1,5 +1,5 @@
 from flask import Flask
-from config import Config
+from config import DeploymentConfig
 from sqlalchemy import MetaData
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -8,7 +8,7 @@ from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config.from_object(DeploymentConfig)
 csrf = CSRFProtect(app)
 
 convention = {

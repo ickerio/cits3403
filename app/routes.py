@@ -21,21 +21,26 @@ def index():
     sketches = Sketch.query.all()
 
     for sketch in sketches:
-        # Determine if the current user has guessed and if they are the author
-        guess_session = GuessSession.query.filter_by(
-            user_id=current_user.id,
-            sketch_id=sketch.id
-        ).first()
+        cannot_guess = False
+        guessed_correctly = False
+        guessed_at = None
 
-        cannot_guess = guess_session is not None or sketch.user_id == current_user.id
-        guessed_correctly = guess_session.guess_correctly if guess_session else None
+        if current_user.is_authenticated:
+            # Determine if the current user has guessed and if they are the author
+            guess_session = GuessSession.query.filter_by(
+                user_id=current_user.id,
+                sketch_id=sketch.id
+            ).first()
 
-        # Check and format the guessed_at date if exists
-        if guess_session and guess_session.guess_at:
-            date_format = "%b %d, %Y" if guess_session.guess_at.year == datetime.now().year else "%b %d, %Y"
-            guessed_at = guess_session.guess_at.strftime(date_format)
-        else:
-            guessed_at = None
+            cannot_guess = guess_session is not None or sketch.user_id == current_user.id
+            guessed_correctly = guess_session.guess_correctly if guess_session else None
+
+            # Check and format the guessed_at date if exists
+            if guess_session and guess_session.guess_at:
+                date_format = "%b %d, %Y" if guess_session.guess_at.year == datetime.now().year else "%b %d, %Y"
+                guessed_at = guess_session.guess_at.strftime(date_format)
+            else:
+                guessed_at = None
 
         # Format the date properly
         date_format = "%b %d, %Y" if sketch.created_at.year == datetime.now().year else "%b %d, %Y"
@@ -51,7 +56,6 @@ def index():
         })
 
     return render_template('index.html', sketches=sketches_data)
-
 
 @app.route('/leaderboard')
 @login_required
