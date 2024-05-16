@@ -11,12 +11,26 @@ html {
     padding-top: 2rem;
 }
 
+body {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b, #ff6a00, #f83600, #f9d423, #ff4e50, #e100ff, #622774, #c229d3, #f7588c, #fb897b, #ffffff);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
 .description {
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: 2rem;
     text-align: center;
+    color: white;
 }
 
 .description h2 {
@@ -39,6 +53,7 @@ html {
 .auth-container h2 {
     text-align: center;
     margin-bottom: 1rem;
+    color: #333;
 }
 
 .auth-container form {
@@ -63,14 +78,9 @@ html {
     padding: 0.5rem;
     border: none;
     border-radius: 0.3em;
-    background-color: #007bff;
     color: white;
     cursor: pointer;
     margin-top: 1rem;
-}
-
-.auth-container button:hover {
-    background-color: #0056b3;
 }
 
 @media (max-width: 768px) {
