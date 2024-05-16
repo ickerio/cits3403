@@ -5,73 +5,80 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 {% endblock %}
 {% block content %}
-    <div class="container">
-        <div class="auth-container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+    <div class="container auth-page">
+        <div class="row">
+            <div class="col-lg-8 col-md-7 description">
+                <h2>Welcome to Sketchy</h2>
+                <p>Your go-to platform for collaborative drawing. Join our community and unleash your creativity with friends and other artists worldwide.</p>
+            </div>
+            <div class="col-lg-4 col-md-5">
+                <div class="auth-container">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
 
-            <form action="{{ request.path }}" method="post">
+                    <form action="{{ request.path }}" method="post">
+                        {{ form.csrf_token }}
 
-                {{ form.csrf_token }}
+                        {% if request.path == '/signup' %}
+                            {{ form.username(class_="form-control", placeholder="Username") }}
+                            {% for error in form.username.errors %}
+                                <small class="form-text text-danger">{{ error }}</small>
+                            {% endfor %}
+                        {% endif %}
 
-                {% if request.path == '/signup' %}
-                    {{ form.username(class_="form-control",placeholder="Username")}}
-                    {% for error in form.username.errors %}
-                        {{ error }}
-                    {% endfor %}
-                {% endif %}
+                        {{ form.email(class_="form-control", placeholder="Email") }}
+                        {% for error in form.email.errors %}
+                            <small class="form-text text-danger">{{ error }}</small>
+                        {% endfor %}
 
-                {{ form.email(class_="form-control",placeholder="Email")}}
-                {% for error in form.email.errors %}
-                    {{ error }}
-                {% endfor %}
+                        {% if request.path == '/signup' %}
+                            {{ form.first_name(class_="form-control", placeholder="First Name") }}
+                            {% for error in form.first_name.errors %}
+                                <small class="form-text text-danger">{{ error }}</small>
+                            {% endfor %}
 
-                {% if request.path == '/signup' %}
-                    {{ form.first_name(class_="form-control",placeholder="First Name")}}
-                    {% for error in form.first_name.errors %}
-                        {{ error }}
-                    {% endfor %}
+                            {{ form.last_name(class_="form-control", placeholder="Last Name") }}
+                            {% for error in form.last_name.errors %}
+                                <small class="form-text text-danger">{{ error }}</small>
+                            {% endfor %}
+                        {% endif %}
 
-                    {{ form.last_name(class_="form-control",placeholder="Last Name")}}
-                    {% for error in form.last_name.errors %}
-                        {{ error }}
-                    {% endfor %}
-                {% endif %}
+                        {{ form.pwd(class_="form-control", placeholder="Password") }}
+                        {% for error in form.pwd.errors %}
+                            <small class="form-text text-danger">{{ error }}</small>
+                        {% endfor %}
 
-                {{ form.pwd(class_="form-control",placeholder="Password")}}
-                {% for error in form.pwd.errors %}
-                    {{ error }}
-                {% endfor %}
+                        {% if request.path == '/signup' %}
+                            {{ form.cpwd(class_="form-control", placeholder="Confirm Password") }}
+                            {% for error in form.cpwd.errors %}
+                                <small class="form-text text-danger">{{ error }}</small>
+                            {% endfor %}
+                        {% endif %}
 
-                {% if request.path == '/signup' %}
-                    {{ form.cpwd(class_="form-control",placeholder="Confirm Password")}}
-                    {% for error in form.cpwd.errors %}
-                        {{ error }}
-                    {% endfor %}
-                {% endif %}
+                        <button type="submit" class="btn btn-block btn-primary mb-3">
+                            {{ btn_action }}
+                        </button>
 
-                <button type="submit" class="btn btn-block btn-primary mb-3">
-                    {{ btn_action }}
-                </button>
-
-                <p>
-                    {% if request.path != '/signup' %}
-                        New here?
-                        <a href="{{url_for('signup')}}">Create account</a>
-                    {% else %}
-                        Already have an account?
-                        <a href="{{url_for('login')}}">Login</a>
-                    {% endif %}
-                </p>
-            </form>
+                        <p>
+                            {% if request.path != '/signup' %}
+                                New here?
+                                <a href="{{url_for('signup')}}">Create account</a>
+                            {% else %}
+                                Already have an account?
+                                <a href="{{url_for('login')}}">Login</a>
+                            {% endif %}
+                        </p>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
