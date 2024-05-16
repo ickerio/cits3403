@@ -1,10 +1,10 @@
-h1 {
+h1, h2 {
     text-align: center;
 }
 
 .canvas-wrapper {
     position: relative;
-    margin: 20px auto;
+    margin: 10px auto;
     border: 2px solid black;
     background-color: white;
 }
@@ -32,9 +32,14 @@ h1 {
 
 #stopwatchDisplay, #successMessage, #attemptsDisplay, #feedbackMessage {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 10px;
     font-size: 20px;
     font-weight: bold;
+}
+
+#stopwatchDisplay {
+    font-size: inherit;
+    font-weight: inherit;
 }
 
 #successMessage {
@@ -43,12 +48,10 @@ h1 {
 
 #feedbackMessage {
     color: red; /* Make the feedback message red */
-    /* Removed vivid effect animation */
 }
 
-.input, .input-group-append {
-    text-align: center;
-    margin-top: 20px;
+.form-inline .form-control, .form-inline .input-group-text, .form-inline .btn {
+    margin-top: 10px;
 }
 
 .hidden {
@@ -56,5 +59,21 @@ h1 {
 }
 
 #attemptsDisplay {
-    color: #007bff; /* Adjust this color to fit your design */
+    color: inherit; /* Inherit color to match other elements */
+    font-size: inherit; /* Inherit size to match other elements */
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.guess-heading {
+    display: none; /* Hide on small screens */
+}
+
+@media (min-width: 768px) {
+    .guess-heading {
+        display: block; /* Show on medium and larger screens */
+    }
 }

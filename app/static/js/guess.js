@@ -6,13 +6,7 @@ $(document).ready(function() {
     function startTimer(duration) {
         secondsRemaining = duration;
         interval = setInterval(function() {
-            let minutes = parseInt(secondsRemaining / 60, 10);
-            let seconds = parseInt(secondsRemaining % 60, 10);
-
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-
-            $('#stopwatchDisplay').text(`${minutes}:${seconds}`);
+            $('#stopwatchDisplay').text(`${secondsRemaining}s`);
 
             if (--secondsRemaining < 0) {
                 clearInterval(interval);
@@ -78,14 +72,17 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.correct) {
                     $('#feedbackMessage').text('You Got It!').addClass('text-success').removeClass('hidden');
+                    $('#feedbackMessage').removeClass('text-danger'); // Ensure it's green
                     clearInterval(interval);
                     disableGuessing();
                 } else {
                     $('#feedbackMessage').text('Incorrect, try again!').addClass('text-danger').removeClass('hidden');
+                    $('#userguess').val(''); // Clear the input field after incorrect guess
                 }
             },
             error: function() {
                 $('#feedbackMessage').text('Error processing your guess. Please try again.').addClass('text-danger').removeClass('hidden');
+                $('#userguess').val(''); // Clear the input field after error
             }
         });
     });
