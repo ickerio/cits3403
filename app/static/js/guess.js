@@ -1,7 +1,7 @@
 $(document).ready(function() {
     let interval;
     let secondsRemaining = 30; // Countdown time in seconds
-    let sketchId = $('#startGuessBtn').data('sketch-id'); // Assuming the sketch ID is stored in a data attribute
+    let guessCount = 0;
 
     function startTimer(duration) {
         secondsRemaining = duration;
@@ -12,7 +12,7 @@ $(document).ready(function() {
             minutes = minutes < 10 ? "0" + minutes : minutes;
             seconds = seconds < 10 ? "0" + seconds : seconds;
 
-            $('#stopwatchDisplay').text(`Time Remaining: ${minutes}:${seconds}`);
+            $('#stopwatchDisplay').text(`${minutes}:${seconds}`);
 
             if (--secondsRemaining < 0) {
                 clearInterval(interval);
@@ -65,8 +65,8 @@ $(document).ready(function() {
     $('form').submit(function(event) {
         event.preventDefault();
         let userGuess = $('#userguess').val();
-        let guessCount = parseInt($('#attemptsDisplay').text().split(': ')[1]) + 1;
-        $('#attemptsDisplay').text(`Guess Attempts: ${guessCount}`);
+        guessCount++;
+        $('#attemptsDisplay').text(guessCount);
 
         $.ajax({
             url: '/submit-guess',
