@@ -8,7 +8,7 @@
     <input type="hidden" id="csrf_token" name="csrf_token" value="{{ csrf_token() }}">
     <h1>Guess the Sketch!</h1>
     <div class="canvas-wrapper">
-        <canvas id="drawnCanvas"></canvas>
+        <canvas id="drawnCanvas" width="2048" height="1152" ></canvas>
         <button id="startGuessBtn" class="start-guess-btn">Start Guessing</button>
     </div>
     <div id="stopwatchDisplay" class="mt-3">Are You Ready? 00:00:00</div>
