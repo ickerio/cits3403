@@ -8,6 +8,7 @@ import random
 import time
 import base64
 import os
+import uuid
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -87,7 +88,7 @@ def login():
                 login_user(user)
                 return redirect(url_for('index'))
             else:
-                flash("Invalid usnermae or password!", "danger")
+                flash("Invalid username or password!", "danger")
         except Exception as e:
             flash(e, "danger")
 
@@ -130,46 +131,58 @@ def set_sketch_id(sketch_id):
     session['sketch_id'] = sketch_id
     return redirect(url_for('guess'))
 
-@app.route('/guess', methods=["GET"])
+@app.route('/guess/<int:sketch_id>', methods=['GET', 'POST'])
 @login_required
-def guess():
-    sketch_id = session.get('sketch_id')
-    if sketch_id is None:
-        # Redirect the user to index or show an error
-        return redirect(url_for('index'))
-    return render_template('guess.html')
+def guess(sketch_id):
+    if current_user.id == Sketch.query.get(sketch_id).user_id or \
+       GuessSession.query.filter_by(user_id=current_user.id, sketch_id=sketch_id).first():
+        return redirect(url_for('index'))  # Redirect if owner or already guessed
 
-@app.route("/begin-guess", methods=["GET"])
+    if request.method == 'GET':
+        # Render the guess page
+        return render_template('guess.html')
+
+    elif request.method == 'POST':
+        # Handle begin and attempt requests
+        if request.form['action'] == 'begin':
+            return begin_guess(sketch_id)
+        elif request.form['action'] == 'attempt':
+            return submit_guess_attempt(sketch_id)
+
+@app.route('/guess/<int:sketch_id>/begin', methods=['POST'])
 @login_required
-def begin_guess():
-    sketch_id = session.get('sketch_id')
-    if not sketch_id:
-        return jsonify({'error': 'Sketch not set'}), 403
-    
+def begin_guess(sketch_id):
+    if current_user.id == Sketch.query.get(sketch_id).user_id or \
+       GuessSession.query.filter_by(user_id=current_user.id, sketch_id=sketch_id).first():
+        return jsonify({'error': 'Cannot begin guess session.'}), 403
+
+    # Generate a unique guess session ID
+    guess_session_id = str(uuid.uuid4())
+    session['guess_session_id'] = guess_session_id
+
+    # Fetch the drawing image data and return along with guess_session_id
     sketch = Sketch.query.get_or_404(sketch_id)
-    word_to_guess = sketch.word.word  # Accessing the word associated with the sketch
-    session['word_to_guess'] = word_to_guess  # Saving the word in the session
-
-    session['num_guesses'] = 0
-
-    #also a GuessSession should be created here?
-
     image_path = sketch.sketch_path
     try:
         with open(image_path, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
         session['guess_start_time'] = time.time()
-        return jsonify({'image_data': 'data:image/png;base64,' + encoded_string, 'word_to_guess': word_to_guess})
+        return jsonify({'image_data': 'data:image/png;base64,' + encoded_string, 'guess_session_id': guess_session_id})
     except IOError:
         return jsonify({'error': 'File not found'}), 404
 
-@app.route("/submit-guess", methods=["POST"])
+@app.route('/guess/<int:sketch_id>/attempt', methods=['POST'])
 @login_required
-def submit_guess():
-    if 'guess_start_time' not in session or 'word_to_guess' not in session:
-        return jsonify(status="error", message="Session not started or corrupted"), 400
-    
-    elapsed_time = time.time() - session['guess_start_time']
+def submit_guess_attempt(sketch_id):
+    # Retrieve the guess session ID from the session
+    guess_session_id = session.get('guess_session_id')
+
+    # Check if the guess session ID exists and belongs to the current user
+    if not guess_session_id:
+        return jsonify({'error': 'Invalid guess session ID.'}), 403
+
+    # Handle the guess attempt
+    elapsed_time = time.time() - session.get('guess_start_time', 0)
     if elapsed_time > 33:  # allowing 3s buffer for bad network delay
         return jsonify(status="error", message="Time expired"), 400
     
@@ -177,31 +190,21 @@ def submit_guess():
     if not guess:
         return jsonify({'correct': False, 'message': 'Guess cannot be empty'}), 400
 
-    guess_correct = guess.lower() == session['word_to_guess'].lower() if session['word_to_guess'] else False
-    sketch_id = session.get('sketch_id')
-
-    # Check if there's an existing guess session for this user and sketch
+    guess_correct = guess.lower() == Sketch.query.get(sketch_id).word.word.lower()
+    
+    # Create or update GuessSession
     guess_session = GuessSession.query.filter_by(user_id=current_user.id, sketch_id=sketch_id).first()
     if not guess_session:
-        # Create a new GuessSession if none exists
         guess_session = GuessSession(
             user_id=current_user.id,
             sketch_id=sketch_id,
             guess_correctly=guess_correct
         )
+        db.session.add(guess_session)
     else:
-        # Update existing GuessSession
         guess_session.guess_correctly = guess_correct
         guess_session.guess_at = db.func.current_timestamp()
 
-    db.session.add(guess_session)
-    db.session.commit()
-
-    session['num_guesses'] = session.get('num_guesses', 0) + 1  # update guesses count
-    current_user.guessed += 1
-    remaining_seconds = 33 - elapsed_time
-    if guess_correct:
-        current_user.points += int((remaining_seconds / session['num_guesses']) * 100)
     db.session.commit()
 
     return jsonify({'correct': guess_correct, 'message': 'Guess received'})
