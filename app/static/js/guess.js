@@ -6,7 +6,7 @@ $(document).ready(function() {
     function startTimer(duration) {
         secondsRemaining = duration;
         interval = setInterval(function() {
-            $('#stopwatchDisplay').text(`${secondsRemaining}s`);
+            $('#stopwatchDisplay').text(` ${secondsRemaining}s`);
 
             if (--secondsRemaining < 0) {
                 clearInterval(interval);
