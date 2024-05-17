@@ -8,6 +8,7 @@ import random
 import time
 import base64
 import os
+from math import floor
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -71,7 +72,7 @@ def leaderboard():
         None
     )
 
-    return render_template('leaderboard.html', leaderboard=leaderboard, current_user_rank=current_user_rank)
+    return render_template('leaderboard.html', leaderboard=leaderboard, current_user_rank=current_user_rank, floor=floor)
 
 @app.route('/login', methods=("GET", "POST"))
 def login():

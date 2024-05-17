@@ -1,18 +1,12 @@
 $(document).ready(function() {
     let interval;
     let secondsRemaining = 30; // Countdown time in seconds
-    let sketchId = $('#startGuessBtn').data('sketch-id'); // Assuming the sketch ID is stored in a data attribute
+    let guessCount = 0;
 
     function startTimer(duration) {
         secondsRemaining = duration;
         interval = setInterval(function() {
-            let minutes = parseInt(secondsRemaining / 60, 10);
-            let seconds = parseInt(secondsRemaining % 60, 10);
-
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-
-            $('#stopwatchDisplay').text(`Time Remaining: ${minutes}:${seconds}`);
+            $('#stopwatchDisplay').text(` ${secondsRemaining}s`);
 
             if (--secondsRemaining < 0) {
                 clearInterval(interval);
@@ -65,8 +59,8 @@ $(document).ready(function() {
     $('form').submit(function(event) {
         event.preventDefault();
         let userGuess = $('#userguess').val();
-        let guessCount = parseInt($('#attemptsDisplay').text().split(': ')[1]) + 1;
-        $('#attemptsDisplay').text(`Guess Attempts: ${guessCount}`);
+        guessCount++;
+        $('#attemptsDisplay').text(guessCount);
 
         $.ajax({
             url: '/submit-guess',
@@ -78,14 +72,17 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.correct) {
                     $('#feedbackMessage').text('You Got It!').addClass('text-success').removeClass('hidden');
+                    $('#feedbackMessage').removeClass('text-danger'); // Ensure it's green
                     clearInterval(interval);
                     disableGuessing();
                 } else {
                     $('#feedbackMessage').text('Incorrect, try again!').addClass('text-danger').removeClass('hidden');
+                    $('#userguess').val(''); // Clear the input field after incorrect guess
                 }
             },
             error: function() {
                 $('#feedbackMessage').text('Error processing your guess. Please try again.').addClass('text-danger').removeClass('hidden');
+                $('#userguess').val(''); // Clear the input field after error
             }
         });
     });

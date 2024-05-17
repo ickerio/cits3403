@@ -29,7 +29,7 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">PPG (?)</h5>
-                <p class="card-text">{{current_user.points / current_user.guessed if current_user.guessed else 0}}</p>
+                <p class="card-text">{{ floor(current_user.points / current_user.guessed) if current_user.guessed else 0 }}</p>
             </div>
         </div>
     </div>
@@ -61,9 +61,8 @@
                 <td>{{user.username}}</td>
                 <td>{{user.guessed}}</td>
                 <td>{{user.points}}</td>
-                <td>{{user.points / user.guessed if user.guessed else 0}}</td>
+                <td>{{ floor(user.points / user.guessed) if user.guessed else 0 }}</td>
             </tr>
-            <tr>
             {% endfor %}
         </tbody>
     </table>
