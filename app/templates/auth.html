@@ -63,7 +63,7 @@
                         {% endif %}
 
                         <button type="submit" class="btn btn-block btn-primary mb-3">
-                            {{ btn_action }}
+                            {% if request.path == '/signup' %}Sign Up{% else %}Login{% endif %}
                         </button>
 
                         <p>
