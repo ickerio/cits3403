@@ -34,3 +34,20 @@ TODO a brief summary of the architecture of the application.
 1. TODO
 2. TODO
 3. TODO
+
+### External Resources
+
+ Images
+- Logo: [Sketchy Logo]( )
+- Favicon: [Favicon]( )
+
+ JavaScript Libraries
+- jQuery: [jQuery](https://code.jquery.com/jquery-3.5.1.min.js)
+- Bootstrap: [Bootstrap](https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js)
+
+ CSS Files
+- Bootstrap CSS: [Bootstrap CSS](https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css)
+
+ Fonts
+- Font Awesome: [Font Awesome](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css)
+
