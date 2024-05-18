@@ -15,3 +15,4 @@ class DeploymentConfig(Config):
 class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory'
     TESTING = True
+    WTF_CSRF_ENABLED = False  # Disable CSRF for testing
