@@ -6,7 +6,7 @@ from datetime import datetime
 from config import TestConfig
 import base64
 
-class BasicTests(unittest.TestCase):
+class TestSetup(unittest.TestCase):
     def setUp(self):
         app.config.from_object(TestConfig)
         self.app = app.test_client()
@@ -47,15 +47,19 @@ class BasicTests(unittest.TestCase):
         db.drop_all()
         self.app_context.pop()
 
+
+class TestUserDetails(TestSetup):
     def test_user_details(self):
         user = User.query.get(1)
         self.assertEqual(user.username, "user1")
         self.assertEqual(user.email, "user1@example.com")
         self.assertEqual(user.first_name, "user")
-        self.assertEqual(user.last_name, "one"),
+        self.assertEqual(user.last_name, "one")
         self.assertTrue(bcrypt.check_password_hash(user.pwd, "Pass1234!"))
         self.assertFalse(bcrypt.check_password_hash(user.pwd, "Pass123!"))
 
+
+class TestUserRegistration(TestSetup):
     def test_user_registration(self):
         response = self.app.post('/signup', data=dict(
             username='newuser',
@@ -69,6 +73,8 @@ class BasicTests(unittest.TestCase):
         new_user = User.query.filter_by(username='newuser').first()
         self.assertIsNotNone(new_user)
 
+
+class TestUserLoginLogout(TestSetup):
     def test_user_login(self):
         response = self.app.post('/login', data=dict(
             email='user1@example.com',
@@ -86,6 +92,8 @@ class BasicTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Login', response.data)
 
+
+class TestPages(TestSetup):
     def test_index_page(self):
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
@@ -99,6 +107,8 @@ class BasicTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Leaderboard', response.data)
 
+
+class TestGuessing(TestSetup):
     def test_guess_page(self):
         self.app.post('/login', data=dict(
             email='user1@example.com',
@@ -132,6 +142,8 @@ class BasicTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Guess received', response.data)
 
+
+class TestDrawing(TestSetup):
     def test_draw_page(self):
         self.app.post('/login', data=dict(
             email='user1@example.com',
@@ -160,6 +172,7 @@ class BasicTests(unittest.TestCase):
         response = self.app.post('/submit-draw', json=dict(image=image_data))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Submitted successfully', response.data)
+
 
 if __name__ == "__main__":
     unittest.main()
