@@ -51,7 +51,7 @@ class TestSetup(unittest.TestCase):
         self.app_context.pop()
 
     def create_mock_sketch(self, user_id, word_id):
-        img = Image.new('RGB', (100, 100), color = (73, 109, 137))
+        img = Image.new('RGB', (100, 100), color=(73, 109, 137))
         img_byte_arr = BytesIO()
         img.save(img_byte_arr, format='PNG')
         img_byte_arr = img_byte_arr.getvalue()
@@ -83,17 +83,36 @@ class TestUserRegistration(TestSetup):
             cpwd='Password123!'
         ), follow_redirects=True)
         self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Login', response.data)
         new_user = User.query.filter_by(username='newuser').first()
         self.assertIsNotNone(new_user)
 
 
-class TestUserLogin(TestSetup):
+class TestUserLoginLogout(TestSetup):
     def test_user_login(self):
         response = self.app.post('/login', data=dict(
             email='user1@example.com',
             pwd='Pass1234!'
         ), follow_redirects=True)
         self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Logout', response.data)
+
+    def test_user_login_invalid_password(self):
+        response = self.app.post('/login', data=dict(
+            email='user1@example.com',
+            pwd='WrongPassword!'
+        ), follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Invalid usnermae or password!', response.data)
+
+    def test_user_logout(self):
+        self.app.post('/login', data=dict(
+            email='user1@example.com',
+            pwd='Pass1234!'
+        ), follow_redirects=True)
+        response = self.app.get('/logout', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Login', response.data)
 
 
 class TestPages(TestSetup):
@@ -117,7 +136,7 @@ class TestGuessing(TestSetup):
             pwd='Pass1234!'
         ), follow_redirects=True)
         self.app.get('/set-sketch-id/1')
-        response = self.app.get('/guess') 
+        response = self.app.get('/guess')
         self.assertEqual(response.status_code, 200)
 
     def test_begin_guess(self):
@@ -127,7 +146,7 @@ class TestGuessing(TestSetup):
         ), follow_redirects=True)
         self.app.get('/set-sketch-id/1')
         response = self.app.get('/begin-guess')
-        self.assertEqual(response.status_code, 200) 
+        self.assertEqual(response.status_code, 200)
 
     def test_submit_guess(self):
         self.app.post('/login', data=dict(
