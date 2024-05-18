@@ -19,17 +19,6 @@ TODO a brief summary of the architecture of the application.
 
 ## Instructions
 
-### Environment Variables
-
-Before running the application, ensure you have set up the following environment variables:
-
-- `SECRET_KEY`: A secret key for your application. This can be set in a `.env` file in the project root.
-
-Example `.env` file:
-```plaintext
-SECRET_KEY=your-secret-key
-```
-
 ### Launching
 
 1. install python3 with `sudo apt-get install python3`
@@ -40,11 +29,36 @@ SECRET_KEY=your-secret-key
 6. install requirements with `pip install -r requirements.txt`
 7. run flask with `flask run`
 
-### Testing
+## Testing
 
-1. TODO
-2. TODO
-3. TODO
+### Prerequisites
+Before you begin, make sure you have completed the steps to set up and run the web application locally. Additionally, ensure you have the following Python packages installed:
+
+- unittest
+
+### Running Unit Tests
+
+#### Step 1: Execute the Unit Tests
+To run the unit tests, follow these steps:
+1. Open your terminal or command prompt.
+2. Navigate to the project directory.
+3. Execute the following command:
+```bash
+python -m unittest unit_tests.py
+```
+#### Running Selenium Tests
+#### Overview
+In our application, we utilize Selenium for comprehensive end-to-end testing. Selenium is essential for automating browser tasks and testing complex user interactions within our web application.
+
+#### Setup
+Before running the Selenium tests, please ensure the following:
+
+Selenium WebDriver is installed and configured correctly.
+The specific WebDriver for your browser (e.g., ChromeDriver for Chrome, GeckoDriver for Firefox) is installed. 
+
+```bash
+python -m unittest selenium_unittests.py
+```
 
 ### External Resources
 
