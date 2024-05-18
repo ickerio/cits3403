@@ -1,7 +1,8 @@
 from datetime import datetime
 from flask import render_template, jsonify, flash, redirect, url_for, session, request
 from flask_login import login_user, logout_user, login_required, current_user
-from app import app, db, login_manager, bcrypt
+from flask import current_app as app
+from app import db, login_manager, bcrypt
 from app.models import Word, User, Sketch, GuessSession
 from app.forms import login_form, signup_form
 import random

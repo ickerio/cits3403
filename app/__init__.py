@@ -7,10 +7,6 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 
-app = Flask(__name__)
-app.config.from_object(DeploymentConfig)
-csrf = CSRFProtect(app)
-
 convention = {
     "ix": 'ix_%(column_0_label)s',
     "uq": "uq_%(table_name)s_%(column_0_name)s",
@@ -19,17 +15,27 @@ convention = {
     "pk": "pk_%(table_name)s"
 }
 metadata = MetaData(naming_convention=convention)
-db = SQLAlchemy(app, metadata=metadata)
-migrate = Migrate(app, db, render_as_batch=True)
-
+db = SQLAlchemy(metadata=metadata)
+migrate = Migrate(render_as_batch=True)
 login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.session_protection = "strong"
-login_manager.login_view = "login"
-login_manager.login_message_category = "info"
-
 bcrypt = Bcrypt()
+csrf = CSRFProtect()
 
-from app import routes, models, forms
+def create_app(config_class=DeploymentConfig):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+    
+    db.init_app(app)
+    migrate.init_app(app, db)
+    bcrypt.init_app(app)
+    login_manager.init_app(app)
+    csrf.init_app(app)
 
+    login_manager.session_protection = "strong"
+    login_manager.login_view = "login"
+    login_manager.login_message_category = "info"
 
+    with app.app_context():
+        from app import routes, models, forms
+    
+    return app
