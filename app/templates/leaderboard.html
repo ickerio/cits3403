@@ -45,8 +45,8 @@
             </tr>
         </thead>
         <tbody>
-            {% for user in leaderboard %}
-            <tr>
+            {% for user, is_current_user in leaderboard %}
+            <tr {% if is_current_user %}class="highlight"{% endif %}>
                 <th scope="row centered">
                     {% if loop.index == 1 %}
                         🥇
