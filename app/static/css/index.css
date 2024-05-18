@@ -1,18 +1,23 @@
+/* index.css */
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjust card size based on screen width */
+    gap: 1rem;
 }
 
 .card {
     overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow var(--transition-time);
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .card-img-top {
-    filter: blur(0.8rem);
-    pointer-events: none;
-}
-
-h1 {
-    padding: 1rem;
+    width: 100%;
+    height: auto;
 }
