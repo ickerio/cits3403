@@ -100,8 +100,7 @@ python -m unittest selenium_unittests.py
 ### External Resources
 
  Images
-- Logo: [Sketchy Logo]( )
-- Favicon: [Favicon]( )
+- Index Page Images: [Index Page Images](https://picsum.photos/)
 
  JavaScript Libraries
 - jQuery: [jQuery](https://code.jquery.com/jquery-3.5.1.min.js)
