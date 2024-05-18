@@ -19,6 +19,17 @@ TODO a brief summary of the architecture of the application.
 
 ## Instructions
 
+### Environment Variables
+
+Before running the application, ensure you have set up the following environment variables:
+
+- `SECRET_KEY`: A secret key for your application. This can be set in a `.env` file in the project root.
+
+Example `.env` file:
+```plaintext
+SECRET_KEY=your-secret-key
+```
+
 ### Launching
 
 1. install python3 with `sudo apt-get install python3`
