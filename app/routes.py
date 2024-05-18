@@ -72,7 +72,11 @@ def leaderboard():
         None
     )
 
-    return render_template('leaderboard.html', leaderboard=leaderboard, current_user_rank=current_user_rank, floor=floor)
+    # Pass an additional parameter indicating whether each user is the current user
+    leaderboard_with_highlight = [(user, user == current_user) for user in leaderboard]
+
+    return render_template('leaderboard.html', leaderboard=leaderboard_with_highlight, current_user_rank=current_user_rank, floor=floor)
+
 
 @app.route('/login', methods=("GET", "POST"))
 def login():
