@@ -48,11 +48,11 @@ def profile():
 
             db.session.commit()
 
-            flash("Profile updated successfully.", "success")
+            flash("Your profile has been updated successfully.", "success")
         else:
-            flash("Invalid current password. Changes not saved.", "danger")
+            flash("Your current password is invalid. Changes not saved.", "danger")
     elif request.method == "POST":
-        flash("Please correct the errors in the form.", "danger")
+        flash("There was an issue updating your profile. Please check your information and try again.", "danger")
 
     return render_template('profile.html', form=form)
 
