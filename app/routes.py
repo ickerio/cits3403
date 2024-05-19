@@ -138,6 +138,10 @@ def guess():
     if sketch_id is None:
         # Redirect the user to index or show an error
         return redirect(url_for('index'))
+    guess_session = GuessSession.query.filter_by(user_id=current_user.id, sketch_id=sketch_id).first()
+    if guess_session:
+        # Redirect the user to index or show an error
+        return redirect(url_for('index'))
     return render_template('guess.html')
 
 @app.route("/begin-guess", methods=["GET"])
@@ -147,13 +151,19 @@ def begin_guess():
     if not sketch_id:
         return jsonify({'error': 'Sketch not set'}), 403
     
+    guess_session = GuessSession(
+        user_id=current_user.id,
+        sketch_id=sketch_id,
+        guess_correctly=False
+    )
+    db.session.add(guess_session)
+    db.session.commit()
+    
     sketch = Sketch.query.get_or_404(sketch_id)
     word_to_guess = sketch.word.word  # Accessing the word associated with the sketch
     session['word_to_guess'] = word_to_guess  # Saving the word in the session
 
     session['num_guesses'] = 0
-
-    #also a GuessSession should be created here?
 
     image_path = sketch.sketch_path
     try:
