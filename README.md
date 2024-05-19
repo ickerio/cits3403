@@ -65,34 +65,13 @@ SECRET_KEY=your-secret-key
 
 ## Testing
 
-### Prerequisites
-Before you begin, make sure you have completed the steps to set up and run the web application locally. Additionally, ensure you have the following Python packages installed:
+Currently, minor changes to the application are required to run the test scripts.
+This includes ensuring the test scripts run with an app instance using TestConfig,
+meaning the real app database will not be affected by the tests. This would be a future
+step for this project.
 
-- unittest
-
-### Running Unit Tests
-
-#### Step 1: Execute the Unit Tests
-To run the unit tests, follow these steps:
-1. Open your terminal or command prompt.
-2. Navigate to the project directory.
-3. Execute the following command:
-```bash
-python -m unittest unit_tests.py
-```
-#### Running Selenium Tests
-#### Overview
-In our application, we utilize Selenium for comprehensive end-to-end testing. Selenium is essential for automating browser tasks and testing complex user interactions within our web application.
-
-#### Setup
-Before running the Selenium tests, please ensure the following:
-
-Selenium WebDriver is installed and configured correctly.
-The specific WebDriver for your browser (e.g., ChromeDriver for Chrome, GeckoDriver for Firefox) is installed. 
-
-```bash
-python -m unittest selenium_unittests.py
-```
+For now, the tests folder contains the foundations for a testing suite, comprising of
+various unit and selenium tests to ensure primary application functionality.
 
 ### External Resources
 
