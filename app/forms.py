@@ -36,8 +36,13 @@ class login_form(FlaskForm):
     pwd = PasswordField(validators=[InputRequired(), Length(min=8, max=72)])
     submit = SubmitField('Log in')
 
+
 class ProfileForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired(), Length(min=2, max=30)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=30)])
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=20)])
-    password = PasswordField('Password', validators=[DataRequired()])
-    new_password = PasswordField('New Password')
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Current Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[EqualTo('confirm', message='Passwords must match')])
+    confirm = PasswordField('Confirm New Password')
     submit = SubmitField('Save Changes')

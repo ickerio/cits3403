@@ -3,14 +3,46 @@ from flask import render_template, jsonify, flash, redirect, url_for, session, r
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db, login_manager, bcrypt
 from app.models import Word, User, Sketch, GuessSession
-from app.forms import login_form, signup_form
+from app.forms import login_form, signup_form, ProfileForm
 import random
 import time
 import base64
 import os
 from math import floor
-from app.forms import ProfileForm
+from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
+
+@app.route('/profile', methods=["GET", "POST"])
+@login_required
+def profile():
+    form = ProfileForm()
+    if form.validate_on_submit():
+        current_password = form.password.data
+        if check_password_hash(current_user.pwd, current_password):
+            current_user.first_name = form.first_name.data
+            current_user.last_name = form.last_name.data
+            current_user.email = form.email.data
+            
+            new_username = form.username.data
+            if new_username != current_user.username:
+                if User.query.filter_by(username=new_username).first():
+                    flash("Username already taken. Please choose a different username.", "danger")
+                    return render_template('profile.html', form=form)
+                else:
+                    current_user.username = new_username
+
+            new_password = form.new_password.data
+            if new_password:
+                current_user.pwd = generate_password_hash(new_password)
+
+            db.session.commit()
+            flash("Profile updated successfully", "success")
+            return redirect(url_for('profile'))
+        else:
+            flash("Invalid current password. Changes not saved.", "danger")
+
+    return render_template('profile.html', form=form)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -279,35 +311,3 @@ def submit_draw():
     return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=session['draw_word']) # this could be wrong
 
 
-
-@app.route('/profile', methods=["GET", "POST"])
-@login_required
-def profile():
-    form = ProfileForm(request.form)
-    if form.validate_on_submit():
-        # Get user input
-        new_username = form.username.data
-        password = form.password.data
-        new_password = form.new_password.data
-
-        # Verify current password
-        if bcrypt.check_password_hash(current_user.pwd, password):
-            # Check if the new username is already taken
-            if new_username != current_user.username and User.query.filter_by(username=new_username).first():
-                flash("Username already taken. Please choose a different username.", "danger")
-            else:
-                # Update username if changed
-                if new_username != current_user.username:
-                    current_user.username = new_username
-                    db.session.commit()
-
-                # Update password if new password provided
-                if new_password:
-                    current_user.pwd = bcrypt.generate_password_hash(new_password)
-                    db.session.commit()
-
-                flash("Profile updated successfully", "success")
-        else:
-            flash("Invalid password. Changes not saved.", "danger")
-
-    return render_template('profile.html', form=form)
