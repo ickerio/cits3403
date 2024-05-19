@@ -1,0 +1,87 @@
+/* General container styling */
+.container.profile-page {
+    padding-top: 50px; /* Adds space at the top of the form */
+    padding-bottom: 50px; /* Adds space at the bottom of the form */
+}
+
+/* Specific styling for the profile form container */
+.profile-container {
+    background: #fff; /* White background */
+    padding: 20px; /* Padding inside the container */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    border: 1px solid #ccc; /* Light gray border */
+}
+
+/* Styling labels for better readability */
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333; /* Dark gray color for text */
+}
+
+/* Input and textarea styling */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%; /* Full width */
+    padding: 8px; /* Padding inside the input */
+    margin-bottom: 15px; /* Space between inputs */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; /* Slightly rounded borders for inputs */
+}
+
+/* Button styling */
+button {
+    width: 100%; /* Full width of the container */
+    padding: 10px; /* Comfortable padding inside the button */
+    background-color: #007BFF; /* Blue background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Add color coordination for feedback messages */
+.alert-container {
+    margin-bottom: 15px; /* Add margin below the alert container */
+}
+
+.alert {
+    padding: 10px; /* Add padding to the alert */
+    margin-bottom: 10px; /* Add margin below the alert */
+    border-radius: 4px; /* Rounded corners for the alert */
+}
+
+/* Color coordination for different types of messages */
+.alert-success {
+    background-color: #d4edda; /* Green background for success messages */
+    border: 1px solid #c3e6cb; /* Green border for success messages */
+    color: #155724; /* Dark green text for success messages */
+}
+
+.alert-danger {
+    background-color: #f8d7da; /* Red background for error messages */
+    border: 1px solid #f5c6cb; /* Red border for error messages */
+    color: #721c24; /* Dark red text for error messages */
+}
+
+.alert-info {
+    background-color: #fff3cd; /* Yellow background for warning messages */
+    border: 1px solid #ffeeba; /* Yellow border for warning messages */
+    color: #856404; /* Dark yellow text for warning messages */
+}
+
+/* Additional styles for alert colors (not currently implemented) */
+.alert-warning {
+    background-color: #fff3cd;  
+    border: 1px solid #ffeeba;  
+    color: #856404;  
+} 
+
