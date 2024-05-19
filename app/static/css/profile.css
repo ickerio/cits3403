@@ -72,16 +72,16 @@ button:hover {
     color: #721c24; /* Dark red text for error messages */
 }
 
-/* Additional styles for alert colors-Aren't currently implemented as we dont have info or warning alerts */
 .alert-info {
-    background-color: #d1ecf1; /* Light blue background for info messages */
-    border: 1px solid #bee5eb; /* Light blue border for info messages */
-    color: #0c5460; /* Dark blue text for info messages */
-}
-
-.alert-warning {
     background-color: #fff3cd; /* Yellow background for warning messages */
     border: 1px solid #ffeeba; /* Yellow border for warning messages */
     color: #856404; /* Dark yellow text for warning messages */
 }
+
+/* Additional styles for alert colors (not currently implemented) */
+.alert-warning {
+    background-color: #fff3cd;  
+    border: 1px solid #ffeeba;  
+    color: #856404;  
+} 
 

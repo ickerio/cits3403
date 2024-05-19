@@ -15,11 +15,11 @@
                         {% if messages %}
                             {% for message in messages %}
                                 {% if message[1] == 'success' %}
-                                    <div class="alert alert-success" role="alert">
+                                    <div class="alert-success" role="alert">
                                 {% elif message[1] == 'danger' %}
-                                    <div class="alert alert-danger" role="alert">
+                                    <div class="alert-danger" role="alert">
                                 {% else %}
-                                    <div class="alert alert-warning" role="alert">
+                                    <div class="alert-warning" role="alert">
                                 {% endif %}
                                         {{ message }}
                                     </div>
