@@ -122,7 +122,7 @@ def signup():
             db.session.commit()
             return redirect(url_for("login"))
         except Exception as e:
-            flash(e, "danger")
+            flash("An error occoured during account creation", "danger")
 
     return render_template('auth.html', form=form)
 
