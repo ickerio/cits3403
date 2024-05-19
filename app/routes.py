@@ -27,7 +27,6 @@ def profile():
             if new_username != current_user.username:
                 if User.query.filter_by(username=new_username).first():
                     flash("Username already taken. Please choose a different username.", "danger")
-                    return render_template('profile.html', form=form)
                 else:
                     current_user.username = new_username
 
@@ -36,8 +35,15 @@ def profile():
                 current_user.pwd = generate_password_hash(new_password)
 
             db.session.commit()
-            flash("Profile updated successfully", "success")
-            return redirect(url_for('profile'))
+            flash("Profile updated successfully. Please sign in again with your new password.", "success")
+            
+            # Log out the user
+            logout_user()
+            
+            # Clear session
+            session.clear()
+            
+            return redirect(url_for('login'))  # Redirect to login page after logout
         else:
             flash("Invalid current password. Changes not saved.", "danger")
 
