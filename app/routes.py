@@ -46,6 +46,9 @@ def profile():
             return redirect(url_for('login'))  # Redirect to login page after logout
         else:
             flash("Invalid current password. Changes not saved.", "danger")
+    else:
+        flash("Please correct the errors in the form.", "danger")
+        return render_template('profile.html', form=form)
 
     return render_template('profile.html', form=form)
 
