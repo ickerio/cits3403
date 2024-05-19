@@ -47,3 +47,41 @@ button {
 button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
+
+/* Add color coordination for feedback messages */
+.alert-container {
+    margin-bottom: 15px; /* Add margin below the alert container */
+}
+
+.alert {
+    padding: 10px; /* Add padding to the alert */
+    margin-bottom: 10px; /* Add margin below the alert */
+    border-radius: 4px; /* Rounded corners for the alert */
+}
+
+/* Color coordination for different types of messages */
+.alert-success {
+    background-color: #d4edda; /* Green background for success messages */
+    border: 1px solid #c3e6cb; /* Green border for success messages */
+    color: #155724; /* Dark green text for success messages */
+}
+
+.alert-danger {
+    background-color: #f8d7da; /* Red background for error messages */
+    border: 1px solid #f5c6cb; /* Red border for error messages */
+    color: #721c24; /* Dark red text for error messages */
+}
+
+/* Additional styles for alert colors-Aren't currently implemented as we dont have info or warning alerts */
+.alert-info {
+    background-color: #d1ecf1; /* Light blue background for info messages */
+    border: 1px solid #bee5eb; /* Light blue border for info messages */
+    color: #0c5460; /* Dark blue text for info messages */
+}
+
+.alert-warning {
+    background-color: #fff3cd; /* Yellow background for warning messages */
+    border: 1px solid #ffeeba; /* Yellow border for warning messages */
+    color: #856404; /* Dark yellow text for warning messages */
+}
+
