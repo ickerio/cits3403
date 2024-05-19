@@ -20,22 +20,29 @@ def profile():
     if form.validate_on_submit():
         current_password = form.password.data
         if bcrypt.check_password_hash(current_user.pwd, current_password):
-            current_user.first_name = form.first_name.data
-            current_user.last_name = form.last_name.data     
+            # Collect potential updates
+            first_name = form.first_name.data
+            last_name = form.last_name.data
             new_username = form.username.data
-            if new_username != current_user.username:
-                if User.query.filter_by(username=new_username).first():
-                    flash("Username already taken. Please choose a different username.", "danger")
-                else:
-                    current_user.username = new_username
-            new_email = form.email.data       
-            if new_email != current_user.email:
-                if User.query.filter_by(email=new_email).first():
-                    flash("Email already taken. Please choose a different email.", "danger")
-                else:
-                    current_user.email = new_email                
-
+            new_email = form.email.data
             new_password = form.new_password.data
+
+            # Check for username conflict
+            if new_username != current_user.username and User.query.filter_by(username=new_username).first():
+                flash("Username already taken. Please choose a different username.", "danger")
+                return render_template('profile.html', form=form)
+
+            # Check for email conflict
+            if new_email != current_user.email and User.query.filter_by(email=new_email).first():
+                flash("Email already taken. Please choose a different email.", "danger")
+                return render_template('profile.html', form=form)
+
+            # All checks passed, proceed with updates
+            current_user.first_name = first_name
+            current_user.last_name = last_name
+            current_user.username = new_username
+            current_user.email = new_email
+
             if new_password:
                 current_user.pwd = bcrypt.generate_password_hash(new_password)
 
