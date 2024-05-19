@@ -40,9 +40,18 @@ class login_form(FlaskForm):
 class ProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[DataRequired(), Length(min=2, max=30)])
     last_name = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=30)])
-    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=20)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    username = StringField(
+        validators=[
+            InputRequired(),
+            Length(3, 20, message="Please provide a valid name"),
+            Regexp(
+                "^[A-Za-z][A-Za-z0-9_.]*$",
+                0,
+                "Usernames must have only letters, numbers, dots, or underscores",
+            ),
+        ]
+    )  
     password = PasswordField('Current Password', validators=[DataRequired()])
-    new_password = PasswordField('New Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[InputRequired(), Length(8, 72)])
     confirm_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('new_password', message='Passwords must match')])
     submit = SubmitField('Save Changes')
