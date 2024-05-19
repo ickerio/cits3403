@@ -41,9 +41,15 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="email" class="form-label">Email</label>
-                            <p class="form-control-static">{{ current_user.email }}</p>
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control", value=current_user.email) }}
+                            {% if form.email.errors %}
+                                {% for error in form.email.errors %}
+                                    <div class="alert alert-danger">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
                         </div>
+                        
                         
                         <div class="form-group">
                             {{ form.password.label(class="form-label") }}
