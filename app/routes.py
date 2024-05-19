@@ -21,9 +21,7 @@ def profile():
         current_password = form.password.data
         if check_password_hash(current_user.pwd, current_password):
             current_user.first_name = form.first_name.data
-            current_user.last_name = form.last_name.data
-            current_user.email = form.email.data
-            
+            current_user.last_name = form.last_name.data            
             new_username = form.username.data
             if new_username != current_user.username:
                 if User.query.filter_by(username=new_username).first():
@@ -36,15 +34,8 @@ def profile():
                 current_user.pwd = generate_password_hash(new_password)
 
             db.session.commit()
-            flash("Profile updated successfully. Please sign in again with your new password.", "success")
-            
-            # Log out the user
-            logout_user()
-            
-            # Clear session
-            session.clear()
-            
-            return redirect(url_for('login'))  # Redirect to login page after logout
+
+            flash("Profile updated successfully.", "success")
         else:
             flash("Invalid current password. Changes not saved.", "danger")
     elif request.method == "POST":
