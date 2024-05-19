@@ -19,7 +19,7 @@ def profile():
     form = ProfileForm()
     if form.validate_on_submit():
         current_password = form.password.data
-        if check_password_hash(current_user.pwd, current_password):
+        if bcrypt.check_password_hash(current_user.pwd, current_password):
             current_user.first_name = form.first_name.data
             current_user.last_name = form.last_name.data            
             new_username = form.username.data
@@ -31,7 +31,7 @@ def profile():
 
             new_password = form.new_password.data
             if new_password:
-                current_user.pwd = generate_password_hash(new_password)
+                current_user.pwd = bcrypt.generate_password_hash(new_password)
 
             db.session.commit()
 
