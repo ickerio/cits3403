@@ -3,12 +3,59 @@ from flask import render_template, jsonify, flash, redirect, url_for, session, r
 from flask_login import login_user, logout_user, login_required, current_user
 from app import app, db, login_manager, bcrypt
 from app.models import Word, User, Sketch, GuessSession
-from app.forms import login_form, signup_form
+from app.forms import login_form, signup_form, ProfileForm
 import random
 import time
 import base64
 import os
 from math import floor
+from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.exc import IntegrityError
+from flask import render_template
+
+@app.route('/profile', methods=["GET", "POST"])
+@login_required
+def profile():
+    form = ProfileForm()
+    if form.validate_on_submit():
+        current_password = form.password.data
+        if bcrypt.check_password_hash(current_user.pwd, current_password):
+            # Collect potential updates
+            first_name = form.first_name.data
+            last_name = form.last_name.data
+            new_username = form.username.data
+            new_email = form.email.data
+            new_password = form.new_password.data
+
+            # Check for username conflict
+            if new_username != current_user.username and User.query.filter_by(username=new_username).first():
+                flash("Username already taken. Please choose a different username.", "danger")
+                return render_template('profile.html', form=form)
+
+            # Check for email conflict
+            if new_email != current_user.email and User.query.filter_by(email=new_email).first():
+                flash("Email already taken. Please choose a different email.", "danger")
+                return render_template('profile.html', form=form)
+
+            # All checks passed, proceed with updates
+            current_user.first_name = first_name
+            current_user.last_name = last_name
+            current_user.username = new_username
+            current_user.email = new_email
+
+            if new_password:
+                current_user.pwd = bcrypt.generate_password_hash(new_password)
+
+            db.session.commit()
+
+            flash("Your profile has been updated successfully.", "success")
+        else:
+            flash("Your current password is invalid. Changes not saved.", "danger")
+    elif request.method == "POST":
+        flash("There was an issue updating your profile. Please check your information and try again.", "danger")
+
+    return render_template('profile.html', form=form)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -284,5 +331,5 @@ def submit_draw():
     sketch = Sketch(sketch_path=filepath, user_id=current_user.id, word_id=word_id) 
     db.session.add(sketch)
     db.session.commit()
-    
+
     return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=session['draw_word']) 
