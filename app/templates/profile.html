@@ -13,13 +13,20 @@
                     <!-- Flash messages -->
                     {% with messages = get_flashed_messages() %}
                         {% if messages %}
-                            <div class="alert-container">
-                                {% for message in messages %}
-                                    <div class="alert {{ message[0] }}">{{ message[1] }}</div>
-                                {% endfor %}
-                            </div>
+                            {% for message in messages %}
+                                {% if message[1] == 'success' %}
+                                    <div class="alert alert-success" role="alert">
+                                {% elif message[1] == 'danger' %}
+                                    <div class="alert alert-danger" role="alert">
+                                {% else %}
+                                    <div class="alert alert-warning" role="alert">
+                                {% endif %}
+                                        {{ message[0] }}
+                                    </div>
+                            {% endfor %}
                         {% endif %}
                     {% endwith %}
+
 
                     <h2>Edit Profile</h2>
                     <form action="{{ url_for('profile') }}" method="post">
