@@ -280,8 +280,8 @@ def submit_draw():
     word_id = Word.query.filter_by(word=session['draw_word']).first().id   
 
     # Create a database entry
-    sketch = Sketch(sketch_path=filepath, user_id=current_user.id, word_id=word_id) # this could be wrong
+    sketch = Sketch(sketch_path=filepath, user_id=current_user.id, word_id=word_id) 
     db.session.add(sketch)
     db.session.commit()
     
-    return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=session['draw_word']) # this could be wrong
+    return jsonify(status="success", message=f"Submitted successfully in {elapsed_time:.2f} seconds", word=session['draw_word']) 
