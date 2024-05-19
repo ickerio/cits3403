@@ -21,14 +21,19 @@ def profile():
         current_password = form.password.data
         if bcrypt.check_password_hash(current_user.pwd, current_password):
             current_user.first_name = form.first_name.data
-            current_user.last_name = form.last_name.data    
-            current_user.email = form.email.data        
+            current_user.last_name = form.last_name.data     
             new_username = form.username.data
             if new_username != current_user.username:
                 if User.query.filter_by(username=new_username).first():
                     flash("Username already taken. Please choose a different username.", "danger")
                 else:
                     current_user.username = new_username
+            new_email = form.email.data       
+            if new_email != current_user.email:
+                if User.query.filter_by(email=new_email).first():
+                    flash("Email already taken. Please choose a different email.", "danger")
+                else:
+                    current_user.email = new_email                
 
             new_password = form.new_password.data
             if new_password:
