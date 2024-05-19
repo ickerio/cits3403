@@ -28,7 +28,7 @@
         </div>
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">PPG (?)</h5>
+                <h5 class="card-title">Points Per Game</h5>
                 <p class="card-text">{{ floor(current_user.points / current_user.guessed) if current_user.guessed else 0 }}</p>
             </div>
         </div>
@@ -41,7 +41,7 @@
                 <th scope="col">Username</th>
                 <th scope="col">Guessed</th>
                 <th scope="col">Points</th>
-                <th scope="col">PPG (?)</th>
+                <th scope="col">PPG</th>
             </tr>
         </thead>
         <tbody>

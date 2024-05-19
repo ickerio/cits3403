@@ -31,5 +31,3 @@ login_manager.login_message_category = "info"
 bcrypt = Bcrypt()
 
 from app import routes, models, forms
-
-
