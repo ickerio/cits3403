@@ -11,6 +11,7 @@ import os
 from math import floor
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
+from flask import render_template
 
 @app.route('/profile', methods=["GET", "POST"])
 @login_required
@@ -46,9 +47,8 @@ def profile():
             return redirect(url_for('login'))  # Redirect to login page after logout
         else:
             flash("Invalid current password. Changes not saved.", "danger")
-    else:
+    elif request.method == "POST":
         flash("Please correct the errors in the form.", "danger")
-        return render_template('profile.html', form=form)
 
     return render_template('profile.html', form=form)
 
