@@ -12,7 +12,7 @@
     <div class="card-grid">
         {% for sketch in sketches %}
             <div class="card">
-                <img src="https://picsum.photos/seed/{{ sketch.id }}/300/300" class="card-img-top" alt="...">
+                <img src="{{ url_for('static', filename=sketch.sketch_path ) }}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">@{{ sketch.username }}</h5>
                     {% if sketch.cannot_guess %}

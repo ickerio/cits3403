@@ -52,6 +52,7 @@ def index():
             'username': sketch.author.username,
             'date': formatted_date,
             'cannot_guess': cannot_guess,
+            'sketch_path': sketch.sketch_path.replace('app/static/', ''),
             'guessed_correctly': guessed_correctly,
             'guessed_at': guessed_at
         })
