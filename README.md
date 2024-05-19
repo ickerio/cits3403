@@ -2,7 +2,7 @@
 
 ### Purpose
 
-Sketchy is an interactive web application designed for collaborative drawing and guessing games. It allows users to create sketches based on randomised prompts and enables other users to guess the word or phrase represented by the sketch. The application's design focuses on facilitating user engagement and creativity.
+Sketchy is a vibrant interactive web application designed for collaborative drawing and guessing games. It allows users to create sketches based on randomised prompts and enables other users to guess the word or phrase represented by the sketch. The application's design focuses on facilitating user engagement and creativity.
 
 Gameplay Experience:
 - Sketchy offers an intuitive and user-friendly interface for creating sketches and guessing words or phrases represented by sketches.
@@ -13,7 +13,7 @@ Creative Expression:
 - Users can interpret given words or phrases in their unique style, resulting in a diverse range of sketches and interpretations.
 
 Engagement:
-- Leaderboards and scoring mechanisms encourage friendly competition and motivate users to improve their drawing and guessing skills.
+- The leaderboard page encourages friendly competition between the users and motivates quicker guessing
 - The guessing mechanism encourages users to interact with each other's sketches as the 'guesser' will be submitting their interpretations of the item.
 
 ### Group Members
@@ -38,10 +38,6 @@ Backend Layer: The backend layer handles the core logic and data processing of t
 Database Layer: Sketchy utilizes a relational database to store application data. SQLAlchemy is used to interact with the database. The database schema includes tables for storing user information, sketches, words and guess sessions. SQLite is used for local development and testing.
 
 Authentication and Authorization: Sketchy implements user authentication and authorization to control access to application features and data. Users can register accounts, log in securely, and access authenticated routes. Flask-Login is used for session management, while Flask-Bcrypt handles password hashing and verification to enhance security.
-
-File Storage: ......
-
-Testing Layer: Sketchy includes a testing layer for automated testing of application functionalities. -complete after all test incl
 
 ## Instructions
 
